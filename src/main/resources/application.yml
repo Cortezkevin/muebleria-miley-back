@@ -1,0 +1,6 @@
+server:
+  port: PORT
+spring:
+  application: { name: inversiones-miley }
+  datasource: { username: DB_USERNAME, password: DB_PASSWORD }
+  jpa: { show-sql: true, hibernate: { ddl-auto: update } }
