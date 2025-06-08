@@ -1,0 +1,16 @@
+package com.furniture.miley.catalog.dto.category;
+import com.furniture.miley.catalog.model.Category;
+
+public record CategoryDTO(
+        String id,
+        String name,
+        String url_image
+) {
+    public static CategoryDTO toDTO(Category category){
+        return new CategoryDTO(
+                category.getId(),
+                category.getName(),
+                category.getUrl_image()
+        );
+    }
+}
