@@ -1,6 +1,10 @@
 server:
   port: PORT
 spring:
-  application: { name: inversiones-miley }
-  datasource: { username: DB_USERNAME, password: DB_PASSWORD }
+  application: { name: furniture-miley }
+  datasource: {
+    url: jdbc:mysql://localhost:3306/bd_furniture-miley?createDatabaseIfNotExist=true,
+    username: root,
+    password: system
+  }
   jpa: { show-sql: true, hibernate: { ddl-auto: update } }
