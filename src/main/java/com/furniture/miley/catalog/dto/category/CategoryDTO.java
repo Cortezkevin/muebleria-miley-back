@@ -1,6 +1,7 @@
 package com.furniture.miley.catalog.dto.category;
 import com.furniture.miley.catalog.model.Category;
 
+
 public record CategoryDTO(
         String id,
         String name,

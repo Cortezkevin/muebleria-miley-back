@@ -1,6 +1,6 @@
 package com.furniture.miley.catalog.repository.feature;
 
-import com.example.product_dinamic_stock.model.Feature;
+import com.furniture.miley.catalog.model.feature.Feature;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
