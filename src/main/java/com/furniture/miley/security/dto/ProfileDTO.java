@@ -1,4 +1,4 @@
-package com.furniture.miley.dto;
+package com.furniture.miley.security.dto;
 
 import com.furniture.miley.dto.address.AddressDTO;
 
