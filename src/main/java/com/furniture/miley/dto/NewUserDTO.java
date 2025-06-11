@@ -1,6 +1,7 @@
 package com.furniture.miley.dto;
 
 import com.furniture.miley.dto.address.MemoryAddressDTO;
+import com.furniture.miley.dto.cart.MemoryCartDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -9,7 +10,7 @@ public record NewUserDTO (
         @NotBlank(message = "Required") String lastName,
         @Email(message = "Invalid") String email,
         @NotBlank(message = "Required") String password,
-        //MemoryCartDTO memoryCart,
+        MemoryCartDTO memoryCart,
         MemoryAddressDTO memoryAddress,
         Boolean isAdmin
 ){}

@@ -1,15 +1,22 @@
 package com.furniture.miley.security.service;
 
+import com.furniture.miley.catalog.model.Product;
+import com.furniture.miley.catalog.repository.ProductRepository;
 import com.furniture.miley.dto.NewUserDTO;
 import com.furniture.miley.dto.ResponseWrapperDTO;
 import com.furniture.miley.exception.customexception.ResourceDuplicatedException;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.model.*;
+import com.furniture.miley.repository.CartItemRepository;
+import com.furniture.miley.repository.CartRepository;
 import com.furniture.miley.repository.PersonalInformationRepository;
 import com.furniture.miley.security.dto.JwtTokenDTO;
 import com.furniture.miley.security.dto.UserDTO;
 import com.furniture.miley.security.enums.RolName;
 import com.furniture.miley.security.jwt.JwtProvider;
+import com.furniture.miley.security.model.MainUser;
+import com.furniture.miley.security.model.Role;
+import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.repository.AddressRepository;
 import com.furniture.miley.security.repository.RoleRepository;
 import com.furniture.miley.security.repository.UserRepository;
@@ -20,7 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -39,6 +49,14 @@ public class UserService {
     private PersonalInformationRepository personalInformationRepository;
     @Autowired
     private JwtProvider jwtProvider;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     @SneakyThrows
     public ResponseWrapperDTO<JwtTokenDTO> registerUser(NewUserDTO newUserDTO ){
@@ -63,7 +81,7 @@ public class UserService {
             User userCreated = repository.save(newUser);
 
 
-            /*Cart newCart = Cart.builder()
+            Cart newCart = Cart.builder()
                     .user(userCreated)
                     .subtotal(BigDecimal.ZERO)
                     .total(BigDecimal.ZERO)
@@ -74,7 +92,7 @@ public class UserService {
 
             Cart cartCreated = cartRepository.save( newCart );
 
-
+            // carga de carrito temporal desde el dto
             if(newUserDTO.memoryCart() != null){
                 List<CartItem> cartItemList = new ArrayList<>();
                 newUserDTO.memoryCart().itemList().forEach( i -> {
@@ -93,14 +111,12 @@ public class UserService {
                 List<CartItem> cartItems = cartItemRepository.saveAll( cartItemList );
                 cartCreated.setCartItems( cartItems );
                 cartRepository.save(cartCreated);
-
             }
 
             Cart cartRecent = cartRepository.findById( cartCreated.getId() ).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
-
             cartRecent.calculateTotals();
 
-            cartRepository.save(cartRecent);*/
+            cartRepository.save(cartRecent);
 
             Address newAddress = Address.builder()
                     .urbanization("")

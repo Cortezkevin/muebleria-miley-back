@@ -1,6 +1,6 @@
 package com.furniture.miley.security.jwt;
 
-import com.furniture.miley.model.MainUser;
+import com.furniture.miley.security.model.MainUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

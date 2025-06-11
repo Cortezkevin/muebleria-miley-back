@@ -1,5 +1,6 @@
 package com.furniture.miley.model;
 
+import com.furniture.miley.security.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
