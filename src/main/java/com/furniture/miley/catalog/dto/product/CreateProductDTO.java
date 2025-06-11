@@ -1,6 +1,7 @@
 package com.furniture.miley.catalog.dto.product;
 
-import com.furniture.miley.catalog.dto.color.ProductColorDTO;
+
+import com.furniture.miley.catalog.dto.color.ColorImagesDTO;
 import com.furniture.miley.catalog.dto.feature.ProductFeatureDTO;
 
 import java.math.BigDecimal;
@@ -13,7 +14,6 @@ public record CreateProductDTO(
         Integer stock,
         String subcategoryId,
         List<ProductFeatureDTO> features,
-        List<ProductColorDTO> colors,
-        List<String> images
+        List<ColorImagesDTO> colorImages
 ) {
 }
