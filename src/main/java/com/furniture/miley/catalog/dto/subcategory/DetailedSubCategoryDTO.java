@@ -1,20 +1,21 @@
 package com.furniture.miley.catalog.dto.subcategory;
 
+import com.furniture.miley.catalog.dto.category.CategoryDTO;
 import com.furniture.miley.catalog.model.SubCategory;
 
-public record SubCategoryDTO (
+public record DetailedSubCategoryDTO(
         String id,
         String name,
         String description,
-        String category,
+        CategoryDTO category,
         String url_image
 ){
-    public static SubCategoryDTO toDTO(SubCategory subCategory){
-        return new SubCategoryDTO(
+    public static DetailedSubCategoryDTO toDTO(SubCategory subCategory){
+        return new DetailedSubCategoryDTO(
                 subCategory.getId(),
                 subCategory.getName(),
                 subCategory.getDescription(),
-                subCategory.getCategory().getName(),
+                CategoryDTO.toDTO( subCategory.getCategory() ),
                 subCategory.getUrl_image()
         );
     }

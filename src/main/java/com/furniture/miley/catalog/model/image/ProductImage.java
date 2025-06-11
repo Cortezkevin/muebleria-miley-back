@@ -17,5 +17,6 @@ public abstract class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     protected String id;
+    protected String image_id;
     protected String url;
 }

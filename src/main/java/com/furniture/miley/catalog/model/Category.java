@@ -15,6 +15,7 @@ public class Category {
     @Id
     private String id;
     private String name;
+    private String description;
     private String url_image;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)

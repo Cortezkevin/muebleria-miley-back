@@ -16,8 +16,8 @@ public class ColorProductImage extends ProductImage {
     @ManyToOne
     private ProductColor productColor;
 
-    public ColorProductImage(String url, ProductColor productColor) {
-        super(null, url);
+    public ColorProductImage(String url, String imageId, ProductColor productColor) {
+        super(null, imageId, url);
         this.productColor = productColor;
     }
 }

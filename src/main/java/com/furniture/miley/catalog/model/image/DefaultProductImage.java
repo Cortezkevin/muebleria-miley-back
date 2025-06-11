@@ -16,8 +16,8 @@ public class DefaultProductImage extends ProductImage {
     @ManyToOne
     private Product product;
 
-    public DefaultProductImage( String url, Product product) {
-        super(null, url);
+    public DefaultProductImage( String url, String imageId, Product product) {
+        super(null,imageId, url);
         this.product = product;
     }
 }

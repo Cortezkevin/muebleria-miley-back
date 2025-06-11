@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public record DetailedCategoryDTO(
         String id,
         String name,
+        String description,
         String url_image,
         List<SubCategoryDTO> subCategoryList
 ) {
@@ -16,6 +17,7 @@ public record DetailedCategoryDTO(
         return new DetailedCategoryDTO(
                 category.getId(),
                 category.getName(),
+                category.getDescription(),
                 category.getUrl_image(),
                 category.getSubCategoryList().stream().map( SubCategoryDTO::toDTO ).collect(Collectors.toList())
         );
