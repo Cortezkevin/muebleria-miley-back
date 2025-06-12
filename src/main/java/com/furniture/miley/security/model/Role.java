@@ -1,4 +1,4 @@
-package com.furniture.miley.model;
+package com.furniture.miley.security.model;
 
 import com.furniture.miley.security.enums.RolName;
 import jakarta.persistence.*;

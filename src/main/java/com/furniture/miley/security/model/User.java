@@ -1,6 +1,7 @@
-package com.furniture.miley.model;
+package com.furniture.miley.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.furniture.miley.model.PersonalInformation;
 import jakarta.persistence.*;
 import lombok.*;
 

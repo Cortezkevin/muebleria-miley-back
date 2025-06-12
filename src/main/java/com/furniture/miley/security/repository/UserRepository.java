@@ -1,6 +1,6 @@
 package com.furniture.miley.security.repository;
 
-import com.furniture.miley.model.User;
+import com.furniture.miley.security.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
