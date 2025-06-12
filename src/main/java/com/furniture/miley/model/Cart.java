@@ -16,7 +16,7 @@ import java.util.List;
 public class Cart {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.UUID )
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private BigDecimal tax = BigDecimal.ZERO;
     private BigDecimal discount = BigDecimal.ZERO;
@@ -40,5 +40,15 @@ public class Cart {
             this.total = newTotal;
             this.subtotal = newSubtotal;
         }
+    }
+
+    public static Cart createEmpty() {
+        return Cart.builder()
+                .subtotal(BigDecimal.ZERO)
+                .total(BigDecimal.ZERO)
+                .shippingCost(BigDecimal.ZERO)
+                .tax(BigDecimal.ZERO)
+                .discount(BigDecimal.ZERO)
+                .build();
     }
 }

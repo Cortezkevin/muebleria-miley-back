@@ -2,6 +2,7 @@ package com.furniture.miley.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.furniture.miley.model.PersonalInformation;
+import com.furniture.miley.security.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,9 @@ public class User {
     private String password;
     @JsonIgnore
     private String tokenPassword;
+
+    @Enumerated( EnumType.STRING )
+    private Status status;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

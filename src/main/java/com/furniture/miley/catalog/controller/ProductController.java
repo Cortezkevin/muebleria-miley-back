@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +59,7 @@ public class ProductController {
         );
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping( value = "/default-images", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
     public ResponseEntity<SuccessResponseDTO<ProductDTO>> createWithDefaultImages(
             @RequestPart("body") String bodyString,
@@ -81,6 +83,7 @@ public class ProductController {
                 );
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping( value = "/color_images", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE } )
     public ResponseEntity<SuccessResponseDTO<ProductDTO>> createWithColorsImages(
             @RequestPart("body") String bodyString,

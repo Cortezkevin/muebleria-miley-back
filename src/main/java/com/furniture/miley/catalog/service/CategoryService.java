@@ -10,6 +10,7 @@ import com.furniture.miley.config.cloudinary.dto.UploadDTO;
 import com.furniture.miley.config.cloudinary.service.CloudinaryService;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService {

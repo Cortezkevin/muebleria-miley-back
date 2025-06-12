@@ -18,7 +18,7 @@ public record UserDTO(
         Set<String> roles,
         ProfileDTO profile
 ){
-    public static UserDTO parseToDto(User user, MainUser mainUser) {
+    public static UserDTO parseToDTO(User user, MainUser mainUser) {
         return new UserDTO(
                 user.getId(),
                 user.getPersonalInformation().getFirstName(),

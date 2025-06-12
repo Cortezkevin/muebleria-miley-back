@@ -25,4 +25,16 @@ public class Address {
     private String fullAddress;
     @OneToOne(mappedBy = "address")
     private PersonalInformation personalInformation;
+
+    public static Address createEmpty(){
+        return Address.builder()
+                .urbanization("")
+                .postalCode(0)
+                .street("")
+                .fullAddress("")
+                .province("")
+                .district("")
+                .department("")
+                .build();
+    }
 }

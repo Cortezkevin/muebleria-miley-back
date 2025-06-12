@@ -9,9 +9,11 @@ import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("api/category")
@@ -54,12 +57,13 @@ public class CategoryController {
         );
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<SuccessResponseDTO<CategoryDTO>> create(
-            @RequestPart("createCategoryDTO") String createCategoryDTOString,
-             @RequestPart(name = "file", required = false) MultipartFile multipartFile
+            @RequestPart("body") String bodyString,
+             @RequestPart("file") MultipartFile multipartFile
             ) throws IOException {
-        CreateCategoryDTO createCategoryDTO = UploadUtils.convertStringToObject(createCategoryDTOString, CreateCategoryDTO.class);
+        CreateCategoryDTO createCategoryDTO = UploadUtils.convertStringToObject(bodyString, CreateCategoryDTO.class);
         File fileToUpload = UploadUtils.getFileFromMultipartFile( multipartFile );
 
         CategoryDTO categoryDTO = mService.create(createCategoryDTO, fileToUpload);
@@ -73,12 +77,13 @@ public class CategoryController {
                 );
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<SuccessResponseDTO<CategoryDTO>> update(
             @RequestPart(name = "file", required = false) MultipartFile multipartFile,
-            @RequestPart("updateCategoryDTO") String updateCategoryDTOString
+            @RequestPart("body") String bodyString
     ) throws IOException {
-        UpdateCategoryDTO updateCategoryDTO = UploadUtils.convertStringToObject( updateCategoryDTOString, UpdateCategoryDTO.class );
+        UpdateCategoryDTO updateCategoryDTO = UploadUtils.convertStringToObject( bodyString, UpdateCategoryDTO.class );
         File fileToUpload = UploadUtils.getFileFromMultipartFile( multipartFile );
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
