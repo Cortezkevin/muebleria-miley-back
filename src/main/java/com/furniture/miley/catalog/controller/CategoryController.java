@@ -66,7 +66,7 @@ public class CategoryController {
         return ResponseEntity.created(URI.create("api/category/" + categoryDTO.id()))
                 .body(
                         new SuccessResponseDTO<>(
-                                ResponseMessage.SUCCESS,
+                                ResponseMessage.CREATED,
                                 HttpStatus.CREATED.name(),
                                 categoryDTO
                         )
@@ -82,7 +82,7 @@ public class CategoryController {
         File fileToUpload = UploadUtils.getFileFromMultipartFile( multipartFile );
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
-                        ResponseMessage.SUCCESS,
+                        ResponseMessage.UPDATED,
                         HttpStatus.OK.name(),
                         mService.update(updateCategoryDTO, fileToUpload)
                 )

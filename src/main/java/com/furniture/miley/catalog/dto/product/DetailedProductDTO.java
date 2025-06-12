@@ -33,7 +33,7 @@ public record DetailedProductDTO(
                 product.getImages() == null || product.getImages().isEmpty() ? new ArrayList<>() : product.getImages().stream().map(ProductImage::getUrl).toList(),
                 product.getColors() == null || product.getColors().isEmpty() ? new ArrayList<>() : product.getColors().stream().map(ProductColorDTO::toDTO).toList(),
                 product.getFeatures().stream().map(ProductFeatureDTO::toDTO).toList(),
-                product.getAdAcquisitionType()
+                product.getAcquisitionType()
         );
     }
 }

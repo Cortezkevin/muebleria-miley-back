@@ -74,7 +74,7 @@ public class ProductController {
         return ResponseEntity.created(URI.create("api/product/" + productDTO.id()))
                 .body(
                         new SuccessResponseDTO<>(
-                                ResponseMessage.SUCCESS,
+                                ResponseMessage.CREATED,
                                 HttpStatus.CREATED.name(),
                                 productDTO
                         )
@@ -103,7 +103,7 @@ public class ProductController {
         return ResponseEntity.created(URI.create("api/product/" + productDTO.id()))
                 .body(
                         new SuccessResponseDTO<>(
-                                ResponseMessage.SUCCESS,
+                                ResponseMessage.CREATED,
                                 HttpStatus.CREATED.name(),
                                 productDTO
                         )

@@ -128,7 +128,7 @@ public class ProductService {
                 .name(createProductDTO.name())
                 .price(createProductDTO.price())
                 .subCategory(subCategory)
-                .adAcquisitionType(AcquisitionType.MANUFACTURED)
+                .acquisitionType(AcquisitionType.MANUFACTURED)
                 .build();
 
         Product newProduct = mRepository.save(productToCreate);
@@ -157,7 +157,7 @@ public class ProductService {
                 .name(createProductDTO.name())
                 .price(createProductDTO.price())
                 .subCategory(subCategory)
-                .adAcquisitionType(AcquisitionType.MANUFACTURED)
+                .acquisitionType(AcquisitionType.MANUFACTURED)
                 .build();
 
         Product newProduct = mRepository.save(productToCreate);

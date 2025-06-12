@@ -27,7 +27,7 @@ public class Product {
     private BigDecimal price;
 
     @Enumerated( EnumType.STRING )
-    private AcquisitionType adAcquisitionType;
+    private AcquisitionType acquisitionType;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private SubCategory subCategory;
