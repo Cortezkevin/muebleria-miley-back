@@ -1,8 +1,8 @@
 package com.furniture.miley.security.dto;
 
-import com.furniture.miley.dto.address.AddressDTO;
+import com.furniture.miley.sales.dto.address.AddressDTO;
 import com.furniture.miley.security.model.MainUser;
-import com.furniture.miley.model.PersonalInformation;
+import com.furniture.miley.sales.model.PersonalInformation;
 import com.furniture.miley.security.model.Role;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.enums.RolName;

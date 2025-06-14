@@ -1,4 +1,4 @@
-package com.furniture.miley.model;
+package com.furniture.miley.sales.model;
 
 import com.furniture.miley.catalog.model.Product;
 import jakarta.persistence.*;
@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

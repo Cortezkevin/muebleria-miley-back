@@ -3,7 +3,7 @@ package com.furniture.miley.security.controller;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.ResponseDTO;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
-import com.furniture.miley.dto.NewUserDTO;
+import com.furniture.miley.sales.dto.NewUserDTO;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.security.dto.ChangePasswordDTO;
 import com.furniture.miley.security.dto.JwtTokenDTO;

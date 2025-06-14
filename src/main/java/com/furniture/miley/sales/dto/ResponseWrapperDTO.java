@@ -1,4 +1,4 @@
-package com.furniture.miley.dto;
+package com.furniture.miley.sales.dto;
 
 import lombok.*;
 

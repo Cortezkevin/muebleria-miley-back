@@ -1,4 +1,4 @@
-package com.furniture.miley.model;
+package com.furniture.miley.sales.model;
 
 import com.furniture.miley.security.model.User;
 import jakarta.persistence.*;

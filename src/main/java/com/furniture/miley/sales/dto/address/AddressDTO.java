@@ -1,6 +1,6 @@
-package com.furniture.miley.dto.address;
+package com.furniture.miley.sales.dto.address;
 
-import com.furniture.miley.model.Address;
+import com.furniture.miley.sales.model.Address;
 
 public record AddressDTO(
         String id,

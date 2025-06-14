@@ -1,4 +1,4 @@
-package com.furniture.miley.dto.address;
+package com.furniture.miley.sales.dto.address;
 
 public record MemoryAddressDTO(
         Double lta,

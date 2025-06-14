@@ -1,4 +1,4 @@
-package com.furniture.miley.model;
+package com.furniture.miley.sales.model;
 
 import jakarta.persistence.*;
 import lombok.*;

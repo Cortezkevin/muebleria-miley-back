@@ -1,7 +1,7 @@
-package com.furniture.miley.dto;
+package com.furniture.miley.sales.dto;
 
-import com.furniture.miley.dto.address.MemoryAddressDTO;
-import com.furniture.miley.dto.cart.MemoryCartDTO;
+import com.furniture.miley.sales.dto.address.MemoryAddressDTO;
+import com.furniture.miley.sales.dto.cart.MemoryCartDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

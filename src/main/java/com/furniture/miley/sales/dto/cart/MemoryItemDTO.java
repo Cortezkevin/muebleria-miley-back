@@ -1,4 +1,4 @@
-package com.furniture.miley.dto.cart;
+package com.furniture.miley.sales.dto.cart;
 
 public record MemoryItemDTO(
         String productId,

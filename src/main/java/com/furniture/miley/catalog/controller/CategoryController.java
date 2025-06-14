@@ -30,7 +30,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService mService;
 
-    @GetMapping
+    @GetMapping("/public")
     public ResponseEntity<SuccessResponseDTO<List<CategoryDTO>>> findAll(){
         List<CategoryDTO> categoryDTOList = mService.getAll();
         return categoryDTOList.isEmpty()

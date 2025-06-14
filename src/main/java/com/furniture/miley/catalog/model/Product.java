@@ -4,6 +4,7 @@ import com.furniture.miley.catalog.enums.AcquisitionType;
 import com.furniture.miley.catalog.model.color.ProductColor;
 import com.furniture.miley.catalog.model.feature.ProductFeature;
 import com.furniture.miley.catalog.model.image.DefaultProductImage;
+import com.furniture.miley.sales.model.CartItem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
+    private Integer stock = 0;
 
     @Enumerated( EnumType.STRING )
     private AcquisitionType acquisitionType;
@@ -43,10 +45,10 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DefaultProductImage> images = new ArrayList<>();
-    /*
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<CartItem> cartItems = new ArrayList<>();
-
+/*
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 

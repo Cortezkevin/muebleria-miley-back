@@ -9,7 +9,10 @@ import java.util.List;
 public record ProductDTO(
         String id,
         String name,
+        String category,
+        String subcategory,
         BigDecimal price,
+        Integer stock,
         List<String> images
 )
 {
@@ -17,7 +20,10 @@ public record ProductDTO(
         return new ProductDTO(
                 product.getId(),
                 product.getName(),
+                product.getSubCategory().getCategory().getName(),
+                product.getSubCategory().getName(),
                 product.getPrice(),
+                product.getStock(),
                 getImagesFromDefaultOrColor( product )
         );
     }
