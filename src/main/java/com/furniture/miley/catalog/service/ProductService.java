@@ -137,7 +137,7 @@ public class ProductService {
 
         for (int i = 0; i < files.size(); i ++ ){
             File file = files.get(i);
-            uploadDTOList.add( new UploadDTO( file, newProduct.getId() + "_" + (i+1) ));
+            uploadDTOList.add( new UploadDTO( file, (i+1) + "_" + newProduct.getId() ));
         }
 
         List<ProductImageDTO> images = cloudinaryService.uploadMany2( "product", uploadDTOList )
@@ -170,10 +170,10 @@ public class ProductService {
 
             for (int i = 0; i < files.size(); i ++ ){
                 File file = files.get(i);
-                uploadDTOList.add( new UploadDTO( file, newProduct.getId() + "_" + (i+1) ));
+                uploadDTOList.add( new UploadDTO( file, color + "_" + (i+1) + "_" + newProduct.getId()  ));
             }
 
-            List<ProductImageDTO> images = cloudinaryService.uploadMany2( "product", uploadDTOList )
+            List<ProductImageDTO> images = cloudinaryService.uploadMany2( "product/colors", uploadDTOList )
                     .stream().map(uploadResultDTO -> new ProductImageDTO(uploadResultDTO.url(), uploadResultDTO.public_id()))
                     .toList();
 

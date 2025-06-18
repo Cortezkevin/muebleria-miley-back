@@ -22,7 +22,7 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/fromUser")
-    public ResponseEntity<SuccessResponseDTO<CartDTO>> addToCart(
+    public ResponseEntity<SuccessResponseDTO<CartDTO>> getCartFromSession(
             @RequestParam(name = "user") String userId
     ) throws ResourceNotFoundException {
         return ResponseEntity.ok(

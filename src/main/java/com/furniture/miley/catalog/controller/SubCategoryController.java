@@ -28,7 +28,7 @@ import java.util.List;
 public class SubCategoryController {
     private final SubCategoryService mService;
 
-    @GetMapping
+    @GetMapping("/public")
     public ResponseEntity<SuccessResponseDTO<List<SubCategoryDTO>>> findAll(){
         List<SubCategoryDTO> categoryDTOList = mService.getAll();
         return categoryDTOList.isEmpty()

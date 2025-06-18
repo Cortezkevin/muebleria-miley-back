@@ -1,5 +1,7 @@
 package com.furniture.miley.catalog.dto.product;
 
+import com.furniture.miley.catalog.dto.subcategory.SubCategoryDTO;
+import com.furniture.miley.catalog.enums.AcquisitionType;
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.model.image.ProductImage;
 
@@ -9,10 +11,12 @@ import java.util.List;
 public record ProductDTO(
         String id,
         String name,
+        String description,
         String category,
-        String subcategory,
+        SubCategoryDTO subcategory,
         BigDecimal price,
         Integer stock,
+        AcquisitionType acquisitionType,
         List<String> images
 )
 {
@@ -20,10 +24,12 @@ public record ProductDTO(
         return new ProductDTO(
                 product.getId(),
                 product.getName(),
+                product.getDescription(),
                 product.getSubCategory().getCategory().getName(),
-                product.getSubCategory().getName(),
+                SubCategoryDTO.toDTO(product.getSubCategory()),
                 product.getPrice(),
                 product.getStock(),
+                product.getAcquisitionType(),
                 getImagesFromDefaultOrColor( product )
         );
     }
