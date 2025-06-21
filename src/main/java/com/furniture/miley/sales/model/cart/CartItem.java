@@ -1,4 +1,4 @@
-package com.furniture.miley.sales.model;
+package com.furniture.miley.sales.model.cart;
 
 import com.furniture.miley.catalog.model.Product;
 import jakarta.persistence.*;

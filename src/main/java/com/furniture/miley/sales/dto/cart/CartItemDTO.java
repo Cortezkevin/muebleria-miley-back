@@ -2,7 +2,7 @@ package com.furniture.miley.sales.dto.cart;
 
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.model.image.ProductImage;
-import com.furniture.miley.sales.model.CartItem;
+import com.furniture.miley.sales.model.cart.CartItem;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -4,7 +4,7 @@ import com.furniture.miley.catalog.enums.AcquisitionType;
 import com.furniture.miley.catalog.model.color.ProductColor;
 import com.furniture.miley.catalog.model.feature.ProductFeature;
 import com.furniture.miley.catalog.model.image.DefaultProductImage;
-import com.furniture.miley.sales.model.CartItem;
+import com.furniture.miley.sales.model.cart.CartItem;
 import jakarta.persistence.*;
 import lombok.*;
 

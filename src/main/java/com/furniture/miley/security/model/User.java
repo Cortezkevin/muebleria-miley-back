@@ -1,13 +1,18 @@
 package com.furniture.miley.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.furniture.miley.sales.model.Cart;
+import com.furniture.miley.delivery.model.Carrier;
+import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.sales.model.PersonalInformation;
+import com.furniture.miley.sales.model.order.Order;
 import com.furniture.miley.security.enums.Status;
+import com.furniture.miley.warehouse.model.Grocer;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter @Setter
@@ -44,6 +49,13 @@ public class User {
     @OneToOne(mappedBy = "user")
     private PersonalInformation personalInformation;
 
-    /*@OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();*/
+    @OneToOne(mappedBy = "user")
+    private Carrier carrier;
+
+    @OneToOne(mappedBy = "user")
+    private Grocer grocer;
+
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "user")
+    @Builder.Default
+    private List<Order> orders = new ArrayList<>();
 }

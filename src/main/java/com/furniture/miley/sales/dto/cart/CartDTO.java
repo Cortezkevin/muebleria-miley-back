@@ -1,6 +1,6 @@
 package com.furniture.miley.sales.dto.cart;
 
-import com.furniture.miley.sales.model.Cart;
+import com.furniture.miley.sales.model.cart.Cart;
 
 import java.math.BigDecimal;
 import java.util.List;

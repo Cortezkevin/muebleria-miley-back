@@ -126,8 +126,10 @@ public class ProductService {
 
         Product productToCreate = Product.builder()
                 .name(createProductDTO.name())
+                .description(createProductDTO.description())
                 .price(createProductDTO.price())
                 .subCategory(subCategory)
+                .stock(0)
                 .acquisitionType(AcquisitionType.MANUFACTURED)
                 .build();
 
@@ -156,7 +158,9 @@ public class ProductService {
         Product productToCreate = Product.builder()
                 .name(createProductDTO.name())
                 .price(createProductDTO.price())
+                .description(createProductDTO.description())
                 .subCategory(subCategory)
+                .stock(0)
                 .acquisitionType(AcquisitionType.MANUFACTURED)
                 .build();
 

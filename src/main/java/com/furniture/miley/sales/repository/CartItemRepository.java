@@ -1,8 +1,8 @@
 package com.furniture.miley.sales.repository;
 
 import com.furniture.miley.catalog.model.Product;
-import com.furniture.miley.sales.model.Cart;
-import com.furniture.miley.sales.model.CartItem;
+import com.furniture.miley.sales.model.cart.Cart;
+import com.furniture.miley.sales.model.cart.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

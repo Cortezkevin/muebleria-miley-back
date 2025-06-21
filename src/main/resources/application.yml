@@ -27,6 +27,5 @@ spring:
 jwt:
   secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
   expiration: 36000
-
 front:
   url: http://localhost:3000
