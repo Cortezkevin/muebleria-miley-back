@@ -8,6 +8,7 @@ import com.furniture.miley.catalog.service.SubCategoryService;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
+import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,7 +46,7 @@ public class SubCategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponseDTO<DetailedSubCategoryDTO>> getDetailsById(
             @PathVariable("id") String id
-    ){
+    ) throws ResourceNotFoundException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.SUCCESS,
@@ -60,7 +61,7 @@ public class SubCategoryController {
     public ResponseEntity<SuccessResponseDTO<SubCategoryDTO>> create(
             @RequestPart("body") String bodyString,
             @RequestPart(name = "file", required = false) MultipartFile multipartFile
-    ) throws IOException {
+    ) throws IOException, ResourceNotFoundException {
         CreateSubCategoryDTO createSubCategoryDTO = UploadUtils.convertStringToObject(bodyString, CreateSubCategoryDTO.class);
         File fileToUpload = UploadUtils.getFileFromMultipartFile( multipartFile );
 
@@ -80,7 +81,7 @@ public class SubCategoryController {
     public ResponseEntity<SuccessResponseDTO<SubCategoryDTO>> update(
             @RequestPart(name = "file", required = false) MultipartFile multipartFile,
             @RequestPart("body") String bodyString
-    ) throws IOException {
+    ) throws IOException, ResourceNotFoundException {
         UpdateSubCategoryDTO updateSubCategoryDTO = UploadUtils.convertStringToObject( bodyString, UpdateSubCategoryDTO.class );
         File fileToUpload = UploadUtils.getFileFromMultipartFile( multipartFile );
         return ResponseEntity.ok(

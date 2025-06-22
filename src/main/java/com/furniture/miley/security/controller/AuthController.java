@@ -3,6 +3,7 @@ package com.furniture.miley.security.controller;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.ResponseDTO;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
+import com.furniture.miley.exception.customexception.NotMatchPasswordsException;
 import com.furniture.miley.sales.dto.NewUserDTO;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.security.dto.ChangePasswordDTO;
@@ -87,7 +88,7 @@ public class AuthController {
     }
 
     @PutMapping("/changePassword")
-    public ResponseEntity<SuccessResponseDTO<String>> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) throws ResourceNotFoundException {
+    public ResponseEntity<SuccessResponseDTO<String>> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) throws ResourceNotFoundException, NotMatchPasswordsException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.PASSWORD_UPDATED,
@@ -96,6 +97,4 @@ public class AuthController {
                 )
         );
     }
-
-
 }

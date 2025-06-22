@@ -6,8 +6,8 @@ import com.furniture.miley.sales.dto.NewUserDTO;
 import com.furniture.miley.sales.dto.ResponseWrapperDTO;
 import com.furniture.miley.exception.customexception.ResourceDuplicatedException;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
-import com.furniture.miley.sales.repository.CartItemRepository;
-import com.furniture.miley.sales.repository.CartRepository;
+import com.furniture.miley.sales.repository.cart.CartItemRepository;
+import com.furniture.miley.sales.repository.cart.CartRepository;
 import com.furniture.miley.sales.repository.PersonalInformationRepository;
 import com.furniture.miley.sales.model.Address;
 import com.furniture.miley.sales.model.cart.Cart;
@@ -61,125 +61,125 @@ public class UserService {
     @Autowired
     private CartItemRepository cartItemRepository;
 
+    public User findById(String id) throws ResourceNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(""));
+    }
+
+    public User save(User user){
+        return repository.save(user);
+    }
+
     @SneakyThrows
     public ResponseWrapperDTO<JwtTokenDTO> registerUser(NewUserDTO newUserDTO ){
-        try {
-            if( repository.existsByEmail(newUserDTO.email()) ) throw new ResourceDuplicatedException(newUserDTO.email() + " ya tiene una cuenta asociada");
+        if( repository.existsByEmail(newUserDTO.email()) ) throw new ResourceDuplicatedException(newUserDTO.email() + " ya tiene una cuenta asociada");
 
-            Role roleAdmin = roleRepository.findByRolName( RolName.ROLE_ADMIN ).orElseThrow(() -> new ResourceNotFoundException(("Rol admin no existe")));
-            Role roleUser = roleRepository.findByRolName( RolName.ROLE_USER ).orElseThrow(() -> new ResourceNotFoundException(("Rol user no existe")));
+        Role roleAdmin = roleRepository.findByRolName( RolName.ROLE_ADMIN ).orElseThrow(() -> new ResourceNotFoundException(("Rol admin no existe")));
+        Role roleUser = roleRepository.findByRolName( RolName.ROLE_USER ).orElseThrow(() -> new ResourceNotFoundException(("Rol user no existe")));
 
-            Set<Role> roles = new HashSet<>();
-            roles.add( roleUser );
+        Set<Role> roles = new HashSet<>();
+        roles.add( roleUser );
 
-            if( newUserDTO.isAdmin() != null && newUserDTO.isAdmin() ) {
-                roles.add( roleAdmin );
-            }
-
-            User newUser = User.builder()
-                    .email(newUserDTO.email())
-                    .password(passwordEncoder.encode(newUserDTO.password()))
-                    .roles( roles )
-                    .build();
-            User userCreated = repository.save(newUser);
-
-
-            Cart newCart = Cart.builder()
-                    .user(userCreated)
-                    .subtotal(BigDecimal.ZERO)
-                    .total(BigDecimal.ZERO)
-                    .shippingCost(BigDecimal.ZERO)
-                    .tax(BigDecimal.ZERO)
-                    .discount(BigDecimal.ZERO)
-                    .build();
-
-            Cart cartCreated = cartRepository.save( newCart );
-
-            // carga de carrito temporal desde el dto
-            if(newUserDTO.memoryCart() != null){
-                List<CartItem> cartItemList = new ArrayList<>();
-                newUserDTO.memoryCart().itemList().forEach( i -> {
-                    Product product = productRepository.findById( i.productId() ).orElse(null);
-                    if( product != null ){
-                        CartItem cartItem = CartItem.builder()
-                                .product( product )
-                                .cart(cartCreated)
-                                .total( product.getPrice().multiply( BigDecimal.valueOf(i.amount()) ) )
-                                .amount(i.amount())
-                                .build();
-                        cartItemList.add( cartItem );
-                    }
-                });
-
-                List<CartItem> cartItems = cartItemRepository.saveAll( cartItemList );
-                cartCreated.setCartItems( cartItems );
-                cartRepository.save(cartCreated);
-            }
-
-            Cart cartRecent = cartRepository.findById( cartCreated.getId() ).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
-            cartRecent.calculateTotals();
-
-            cartRepository.save(cartRecent);
-
-            Address newAddress = Address.builder()
-                    .urbanization("")
-                    .postalCode(0)
-                    .street("")
-                    .fullAddress("")
-                    .province("")
-                    .district("")
-                    .department("")
-                    .build();
-
-            if(newUserDTO.memoryAddress() != null){
-                System.out.println("MEMORY ADDRESS PRESENT");
-                newAddress.setFullAddress( newUserDTO.memoryAddress().fullAddress() );
-                newAddress.setProvince( newUserDTO.memoryAddress().province() );
-                newAddress.setDistrict( newUserDTO.memoryAddress().district() );
-                newAddress.setDepartment( newUserDTO.memoryAddress().department() );
-                newAddress.setStreet( newUserDTO.memoryAddress().street() );
-                newAddress.setUrbanization( newUserDTO.memoryAddress().urbanization() );
-                newAddress.setPostalCode( newUserDTO.memoryAddress().postalCode() );
-                newAddress.setLng( newUserDTO.memoryAddress().lng() );
-                newAddress.setLta( newUserDTO.memoryAddress().lta() );
-            }
-
-            Address addressCreated = addressRepository.save( newAddress );
-
-            PersonalInformation newPersonalInformation = PersonalInformation.builder()
-                    .firstName(newUserDTO.firstName())
-                    .lastName(newUserDTO.lastName())
-                    .phone("")
-                    .user(userCreated)
-                    .address(addressCreated)
-                    .build();
-
-            PersonalInformation personalInformationCreated = personalInformationRepository.save( newPersonalInformation );
-
-            userCreated.setPersonalInformation( personalInformationCreated );
-            User userRecent = repository.save( userCreated );
-
-
-            MainUser mainUser = MainUser.build( userRecent );
-            String token = jwtProvider.generateToken( mainUser );
-
-            JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(
-                    token,
-                    UserDTO.parseToDTO( userRecent, personalInformationCreated )
-            );
-            return ResponseWrapperDTO.<JwtTokenDTO>builder()
-                    .message("Usuario creado satisfactoriamente")
-                    .status(HttpStatus.OK.name())
-                    .success( true )
-                    .content( jwtTokenDTO )
-                    .build();
-        }catch (Exception e){
-            return ResponseWrapperDTO.<JwtTokenDTO>builder()
-                    .message("Ocurrio un error: " + e.getMessage())
-                    .status(HttpStatus.BAD_REQUEST.name())
-                    .success( false )
-                    .content( null )
-                    .build();
+        if( newUserDTO.isAdmin() != null && newUserDTO.isAdmin() ) {
+            roles.add( roleAdmin );
         }
+
+        User newUser = User.builder()
+                .email(newUserDTO.email())
+                .password(passwordEncoder.encode(newUserDTO.password()))
+                .roles( roles )
+                .build();
+        User userCreated = repository.save(newUser);
+
+
+        Cart newCart = Cart.builder()
+                .user(userCreated)
+                .subtotal(BigDecimal.ZERO)
+                .total(BigDecimal.ZERO)
+                .shippingCost(BigDecimal.ZERO)
+                .tax(BigDecimal.ZERO)
+                .discount(BigDecimal.ZERO)
+                .build();
+
+        Cart cartCreated = cartRepository.save( newCart );
+
+        // carga de carrito temporal desde el dto
+        if(newUserDTO.memoryCart() != null){
+            List<CartItem> cartItemList = new ArrayList<>();
+            newUserDTO.memoryCart().itemList().forEach( i -> {
+                Product product = productRepository.findById( i.productId() ).orElse(null);
+                if( product != null ){
+                    CartItem cartItem = CartItem.builder()
+                            .product( product )
+                            .cart(cartCreated)
+                            .total( product.getPrice().multiply( BigDecimal.valueOf(i.amount()) ) )
+                            .amount(i.amount())
+                            .build();
+                    cartItemList.add( cartItem );
+                }
+            });
+
+            List<CartItem> cartItems = cartItemRepository.saveAll( cartItemList );
+            cartCreated.setCartItems( cartItems );
+            cartRepository.save(cartCreated);
+        }
+
+        Cart cartRecent = cartRepository.findById( cartCreated.getId() ).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
+        cartRecent.calculateTotals();
+
+        cartRepository.save(cartRecent);
+
+        Address newAddress = Address.builder()
+                .urbanization("")
+                .postalCode(0)
+                .street("")
+                .fullAddress("")
+                .province("")
+                .district("")
+                .department("")
+                .build();
+
+        if(newUserDTO.memoryAddress() != null){
+            System.out.println("MEMORY ADDRESS PRESENT");
+            newAddress.setFullAddress( newUserDTO.memoryAddress().fullAddress() );
+            newAddress.setProvince( newUserDTO.memoryAddress().province() );
+            newAddress.setDistrict( newUserDTO.memoryAddress().district() );
+            newAddress.setDepartment( newUserDTO.memoryAddress().department() );
+            newAddress.setStreet( newUserDTO.memoryAddress().street() );
+            newAddress.setUrbanization( newUserDTO.memoryAddress().urbanization() );
+            newAddress.setPostalCode( newUserDTO.memoryAddress().postalCode() );
+            newAddress.setLng( newUserDTO.memoryAddress().lng() );
+            newAddress.setLta( newUserDTO.memoryAddress().lta() );
+        }
+
+        Address addressCreated = addressRepository.save( newAddress );
+
+        PersonalInformation newPersonalInformation = PersonalInformation.builder()
+                .firstName(newUserDTO.firstName())
+                .lastName(newUserDTO.lastName())
+                .phone("")
+                .user(userCreated)
+                .address(addressCreated)
+                .build();
+
+        PersonalInformation personalInformationCreated = personalInformationRepository.save( newPersonalInformation );
+
+        userCreated.setPersonalInformation( personalInformationCreated );
+        User userRecent = repository.save( userCreated );
+
+
+        MainUser mainUser = MainUser.build( userRecent );
+        String token = jwtProvider.generateToken( mainUser );
+
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(
+                token,
+                UserDTO.parseToDTO( userRecent, personalInformationCreated )
+        );
+        return ResponseWrapperDTO.<JwtTokenDTO>builder()
+                .message("Usuario creado satisfactoriamente")
+                .status(HttpStatus.OK.name())
+                .success( true )
+                .content( jwtTokenDTO )
+                .build();
     }
 }

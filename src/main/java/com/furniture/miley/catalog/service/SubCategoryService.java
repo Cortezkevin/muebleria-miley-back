@@ -9,6 +9,7 @@ import com.furniture.miley.catalog.model.SubCategory;
 import com.furniture.miley.catalog.repository.SubCategoryRepository;
 import com.furniture.miley.config.cloudinary.service.CloudinaryService;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
+import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,9 @@ public class SubCategoryService {
     private final CategoryService categoryService;
     private final CloudinaryService cloudinaryService;
 
-    public SubCategory findById(String id){
+    public SubCategory findById(String id) throws ResourceNotFoundException {
         return mRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Resoruce"));
+                .orElseThrow(() -> new ResourceNotFoundException("Subcategoria no encontrada", "Subcategory"));
     }
 
     public List<SubCategoryDTO> getAll(){
@@ -38,7 +39,7 @@ public class SubCategoryService {
                 .toList();
     }
 
-    public SubCategoryDTO create(CreateSubCategoryDTO createSubCategoryDTO, File file) throws IOException {
+    public SubCategoryDTO create(CreateSubCategoryDTO createSubCategoryDTO, File file) throws IOException, ResourceNotFoundException {
         String id = UUID.randomUUID().toString();
 
         Category category = categoryService.findById(createSubCategoryDTO.category_id());
@@ -53,7 +54,7 @@ public class SubCategoryService {
         return SubCategoryDTO.toDTO( mRepository.save( newSubCategory ) );
     }
 
-    public SubCategoryDTO update(UpdateSubCategoryDTO updateSubCategoryDTO, File file) throws IOException {
+    public SubCategoryDTO update(UpdateSubCategoryDTO updateSubCategoryDTO, File file) throws IOException, ResourceNotFoundException {
         SubCategory subCategory = this.findById( updateSubCategoryDTO.id() );
         if( file != null ){
             cloudinaryService.delete("sub_category"+"/"+ UploadUtils.formatFileName(subCategory.getName()));
@@ -70,13 +71,13 @@ public class SubCategoryService {
         return SubCategoryDTO.toDTO( mRepository.save( subCategory ) );
     }
 
-    public void delete(String id) throws IOException {
+    public void delete(String id) throws IOException, ResourceNotFoundException {
         SubCategory subCategory = this.findById( id );
         cloudinaryService.delete("sub_category/"+UploadUtils.formatFileName(subCategory.getName()));
         mRepository.delete(subCategory);
     }
 
-    public DetailedSubCategoryDTO getDetailsById(String id) {
+    public DetailedSubCategoryDTO getDetailsById(String id) throws ResourceNotFoundException {
         return DetailedSubCategoryDTO.toDTO(this.findById(id));
     }
 }

@@ -2,6 +2,7 @@ package com.furniture.miley.sales.controller;
 
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
+import com.furniture.miley.exception.customexception.InsufficientStockException;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.sales.dto.cart.AddItemDTO;
 import com.furniture.miley.sales.dto.cart.CartDTO;
@@ -37,7 +38,7 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<SuccessResponseDTO<CartDTO>> addToCart(
             @RequestBody AddItemDTO addItemDTO
-            ) throws ResourceNotFoundException {
+            ) throws ResourceNotFoundException, InsufficientStockException {
         Pair<CartDTO, String> result = cartService.addItemToCart( addItemDTO );
         return  ResponseEntity.ok(
                 new SuccessResponseDTO<>(

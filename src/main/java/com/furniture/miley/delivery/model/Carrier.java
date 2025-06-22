@@ -24,7 +24,7 @@ public class Carrier {
     @Enumerated( EnumType.STRING )
     private CarrierStatus status;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
     @OneToMany(mappedBy = "carrier", cascade = CascadeType.ALL, orphanRemoval = true)

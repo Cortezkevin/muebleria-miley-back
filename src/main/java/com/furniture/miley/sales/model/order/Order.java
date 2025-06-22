@@ -2,6 +2,7 @@ package com.furniture.miley.sales.model.order;
 
 import com.furniture.miley.sales.enums.OrderStatus;
 import com.furniture.miley.security.model.User;
+import com.furniture.miley.warehouse.model.ExitGuide;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,6 +57,6 @@ public class Order {
     @OneToOne(mappedBy = "order")
     private Invoice invoice;
 
-    /*@OneToOne(mappedBy = "order")
-    private ExitGuide exitGuide;*/
+    @OneToOne(mappedBy = "order")
+    private ExitGuide exitGuide;
 }

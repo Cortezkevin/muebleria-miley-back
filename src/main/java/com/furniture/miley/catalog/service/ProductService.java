@@ -21,6 +21,7 @@ import com.furniture.miley.catalog.repository.color.ProductColorRepository;
 import com.furniture.miley.config.cloudinary.dto.UploadDTO;
 import com.furniture.miley.config.cloudinary.dto.UploadResultDTO;
 import com.furniture.miley.config.cloudinary.service.CloudinaryService;
+import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,12 +53,16 @@ public class ProductService {
                 .toList();
     }
 
-    public Product findById(String id){ // metodo separado exclusivo para retornar la entidad, con mayor control sobre los errores y otros detalles
+    public Product findById(String id) throws ResourceNotFoundException { // metodo separado exclusivo para retornar la entidad, con mayor control sobre los errores y otros detalles
         return mRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Resource exception"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado","Product"));
     }
 
-    public DetailedProductDTO getDetailsById(String id){
+    public Product save(Product product){
+        return mRepository.save(product);
+    }
+
+    public DetailedProductDTO getDetailsById(String id) throws ResourceNotFoundException {
         return DetailedProductDTO.toDTO(this.findById(id));
     }
 
@@ -121,7 +126,7 @@ public class ProductService {
         }
     }
 
-    public ProductDTO create(CreateProductDTO createProductDTO, List<File> files){
+    public ProductDTO create(CreateProductDTO createProductDTO, List<File> files) throws ResourceNotFoundException {
         SubCategory subCategory = subCategoryService.findById(createProductDTO.subcategoryId());
 
         Product productToCreate = Product.builder()
@@ -152,7 +157,7 @@ public class ProductService {
         return ProductDTO.toDTO( mRepository.save(newProduct) );
     }
 
-    public ProductDTO create(CreateProductDTO createProductDTO, Map<String, List<File>> colorFiles){
+    public ProductDTO create(CreateProductDTO createProductDTO, Map<String, List<File>> colorFiles) throws ResourceNotFoundException {
         SubCategory subCategory = subCategoryService.findById(createProductDTO.subcategoryId());
 
         Product productToCreate = Product.builder()

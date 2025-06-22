@@ -1,4 +1,4 @@
-package com.furniture.miley.sales.repository;
+package com.furniture.miley.sales.repository.cart;
 
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.sales.model.cart.Cart;

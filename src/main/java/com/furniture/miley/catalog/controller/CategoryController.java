@@ -8,6 +8,7 @@ import com.furniture.miley.catalog.service.CategoryService;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
+import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,7 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponseDTO<DetailedCategoryDTO>> getDetailsById(
             @PathVariable("id") String id
-    ){
+    ) throws ResourceNotFoundException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.SUCCESS,
@@ -82,7 +83,7 @@ public class CategoryController {
     public ResponseEntity<SuccessResponseDTO<CategoryDTO>> update(
             @RequestPart(name = "file", required = false) MultipartFile multipartFile,
             @RequestPart("body") String bodyString
-    ) throws IOException {
+    ) throws IOException, ResourceNotFoundException {
         UpdateCategoryDTO updateCategoryDTO = UploadUtils.convertStringToObject( bodyString, UpdateCategoryDTO.class );
         File fileToUpload = UploadUtils.getFileFromMultipartFile( multipartFile );
         return ResponseEntity.ok(

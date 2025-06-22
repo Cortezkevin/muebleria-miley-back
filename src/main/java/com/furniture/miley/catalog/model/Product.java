@@ -4,7 +4,11 @@ import com.furniture.miley.catalog.enums.AcquisitionType;
 import com.furniture.miley.catalog.model.color.ProductColor;
 import com.furniture.miley.catalog.model.feature.ProductFeature;
 import com.furniture.miley.catalog.model.image.DefaultProductImage;
+import com.furniture.miley.purchase.model.PurchaseOrderDetail;
+import com.furniture.miley.purchase.model.Supplier;
 import com.furniture.miley.sales.model.cart.CartItem;
+import com.furniture.miley.sales.model.order.OrderDetail;
+import com.furniture.miley.warehouse.model.InventoryMovements;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,7 +52,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<CartItem> cartItems = new ArrayList<>();
-/*
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
@@ -59,5 +63,5 @@ public class Product {
     private List<InventoryMovements> inventoryMovements = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Supplier supplier;*/
+    private Supplier supplier;
 }

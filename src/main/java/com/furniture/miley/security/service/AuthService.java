@@ -3,15 +3,14 @@ package com.furniture.miley.security.service;
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.repository.ProductRepository;
 import com.furniture.miley.commons.constants.ResponseMessage;
+import com.furniture.miley.exception.customexception.*;
 import com.furniture.miley.sales.dto.NewUserDTO;
-import com.furniture.miley.exception.customexception.ResourceDuplicatedException;
-import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.sales.model.Address;
 import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.sales.model.cart.CartItem;
 import com.furniture.miley.sales.model.PersonalInformation;
-import com.furniture.miley.sales.repository.CartItemRepository;
-import com.furniture.miley.sales.repository.CartRepository;
+import com.furniture.miley.sales.repository.cart.CartItemRepository;
+import com.furniture.miley.sales.repository.cart.CartRepository;
 import com.furniture.miley.sales.repository.PersonalInformationRepository;
 import com.furniture.miley.security.dto.ChangePasswordDTO;
 import com.furniture.miley.security.dto.JwtTokenDTO;
@@ -68,7 +67,7 @@ public class AuthService {
         String username = jwtProvider.getUsernameFromToken( token );
         User user = userRepository.findByEmail( username ).orElseThrow( () -> new ResourceNotFoundException(ResponseMessage.USER_NOT_FOUND)) ;
         if( user.getStatus().equals(Status.INACTIVO)){
-           throw new RuntimeException(ResponseMessage.USER_DISABLED);
+           throw new UnavailableUserException(ResponseMessage.USER_DISABLED, username);
         }
         return UserDTO.parseToDTO( user );
     }
@@ -77,7 +76,7 @@ public class AuthService {
     public JwtTokenDTO loginUser(LoginUserDTO loginUserDTO ){
         User userFound = userRepository.findByEmail(loginUserDTO.email()).orElseThrow(() -> new ResourceNotFoundException("Email no existente"));
         if( userFound.getStatus().equals(Status.INACTIVO)){
-            throw new RuntimeException(ResponseMessage.USER_DISABLED);
+            throw new UnavailableUserException(ResponseMessage.USER_DISABLED, userFound.getEmail());
         }
 
         boolean validPassword = passwordEncoder.matches(loginUserDTO.password(), userFound.getPassword());
@@ -94,7 +93,7 @@ public class AuthService {
                     UserDTO.parseToDTO( userFound , mainUser )
             );
         } else {
-            throw new ResourceNotFoundException("Credenciales invalidas");
+            throw new InvalidCredentialsException("Credenciales invalidas", loginUserDTO.email(), loginUserDTO.password());
         }
     }
 
@@ -184,7 +183,6 @@ public class AuthService {
         userCreated.setPersonalInformation( personalInformationCreated );
         User userRecent = userRepository.save( userCreated );
 
-
         MainUser mainUser = MainUser.build( userRecent );
         String token = jwtProvider.generateToken( mainUser );
 
@@ -194,7 +192,7 @@ public class AuthService {
         );
     }
 
-    public String changePassword(ChangePasswordDTO dto) throws ResourceNotFoundException {
+    public String changePassword(ChangePasswordDTO dto) throws ResourceNotFoundException, NotMatchPasswordsException {
         User user = userRepository.findByTokenPassword( dto.tokenPassword() ).orElseThrow(() -> new ResourceNotFoundException("El token ingresado no es valido"));
         if( dto.password().equals(dto.confirmPassword())){
             user.setPassword(passwordEncoder.encode( dto.password()));
@@ -202,7 +200,7 @@ public class AuthService {
             userRepository.save( user );
             return "Se actualizo su contrasena";
         }else {
-            return "Las contraseñas no coincidem";
+            throw new NotMatchPasswordsException("Las contraseñas ingresadas no coinciden", dto.password(), dto.confirmPassword());
         }
     }
 }

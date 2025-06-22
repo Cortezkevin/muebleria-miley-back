@@ -9,6 +9,7 @@ import com.furniture.miley.catalog.repository.CategoryRepository;
 import com.furniture.miley.config.cloudinary.dto.UploadDTO;
 import com.furniture.miley.config.cloudinary.service.CloudinaryService;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
+import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,9 @@ public class CategoryService {
 
     private final CloudinaryService cloudinaryService;
 
-    public Category findById(String id){
+    public Category findById(String id) throws ResourceNotFoundException {
         return mRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Resource"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada", "Category"));
     }
 
     public List<CategoryDTO> getAll(){
@@ -38,7 +39,7 @@ public class CategoryService {
                 .toList();
     }
 
-    public DetailedCategoryDTO getDetailsById(String id){
+    public DetailedCategoryDTO getDetailsById(String id) throws ResourceNotFoundException {
         return DetailedCategoryDTO.toDTO(this.findById(id));
     }
 
@@ -55,7 +56,7 @@ public class CategoryService {
         return CategoryDTO.toDTO( mRepository.save( newCategory ) );
     }
 
-    public CategoryDTO update(UpdateCategoryDTO updateCategoryDTO, File file) throws IOException {
+    public CategoryDTO update(UpdateCategoryDTO updateCategoryDTO, File file) throws IOException, ResourceNotFoundException {
         Category category = this.findById( updateCategoryDTO.id() );
 
         if( file != null ){
@@ -69,7 +70,7 @@ public class CategoryService {
         return CategoryDTO.toDTO( mRepository.save( category ) );
     }
 
-    public void delete(String id) throws IOException {
+    public void delete(String id) throws IOException, ResourceNotFoundException {
         Category category = this.findById( id );
         cloudinaryService.delete("category/"+UploadUtils.formatFileName(category.getName()));
         mRepository.delete(category);

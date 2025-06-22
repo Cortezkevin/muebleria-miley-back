@@ -32,12 +32,12 @@ public class OrderShipping {
     @OneToOne(fetch = FetchType.LAZY)
     private OrderShippingLocation shippingLocation;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Carrier carrier;
 
     @Enumerated( EnumType.STRING )
     private ShippingStatus status;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Order order;
 }

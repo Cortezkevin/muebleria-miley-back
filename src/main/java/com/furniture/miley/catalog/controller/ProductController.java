@@ -8,6 +8,7 @@ import com.furniture.miley.catalog.service.ProductService;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
+import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class ProductController {
     @GetMapping("/public/{id}")
     public ResponseEntity<SuccessResponseDTO<DetailedProductDTO>> getDetailsById(
             @PathVariable("id") String id
-    ){
+    ) throws ResourceNotFoundException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.SUCCESS,
@@ -64,7 +65,7 @@ public class ProductController {
     public ResponseEntity<SuccessResponseDTO<ProductDTO>> createWithDefaultImages(
             @RequestPart("body") String bodyString,
             @RequestPart("files") List<MultipartFile> multipartFiles
-    ){
+    ) throws ResourceNotFoundException {
         CreateProductDTO createProductDTO = UploadUtils.convertStringToObject( bodyString, CreateProductDTO.class );
         List<File> filesToUpload = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
@@ -88,7 +89,7 @@ public class ProductController {
     public ResponseEntity<SuccessResponseDTO<ProductDTO>> createWithColorsImages(
             @RequestPart("body") String bodyString,
             @RequestPart("files") List<MultipartFile> multipartFiles
-    ){
+    ) throws ResourceNotFoundException {
         CreateProductDTO createProductDTO = UploadUtils.convertStringToObject( bodyString, CreateProductDTO.class );
 
         Map<String, List<File>> groupedColorFiles = new HashMap<>();

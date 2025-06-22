@@ -25,9 +25,9 @@ public class OrderPreparation {
     @Enumerated( EnumType.STRING )
     private PreparationStatus status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Grocer grocer;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Order order;
 }

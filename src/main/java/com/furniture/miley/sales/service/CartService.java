@@ -2,6 +2,8 @@ package com.furniture.miley.sales.service;
 
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.repository.ProductRepository;
+import com.furniture.miley.exception.customexception.InsufficientStockException;
+import com.furniture.miley.exception.customexception.NotBelongCartException;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.sales.dto.cart.AddItemDTO;
 import com.furniture.miley.sales.dto.cart.CartDTO;
@@ -9,8 +11,8 @@ import com.furniture.miley.sales.dto.cart.RemoveItemDTO;
 import com.furniture.miley.sales.dto.cart.UpdateShippingCostDTO;
 import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.sales.model.cart.CartItem;
-import com.furniture.miley.sales.repository.CartItemRepository;
-import com.furniture.miley.sales.repository.CartRepository;
+import com.furniture.miley.sales.repository.cart.CartItemRepository;
+import com.furniture.miley.sales.repository.cart.CartRepository;
 import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.repository.UserRepository;
@@ -42,7 +44,7 @@ public class CartService {
         User userSession = userRepository.findByEmail( mainUser.getEmail() ).orElseThrow(() -> new ResourceNotFoundException("No tiene autorizacion para ver este carrito"));
 
         if( !(userFounded.getEmail().equals(userSession.getEmail()))){
-            throw new RuntimeException("Este carrito no le pertenece");
+            throw new NotBelongCartException("Este carrito no le pertenece");
         }
 
         Cart cart = cartRepository.findByUser( userSession ).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
@@ -50,13 +52,13 @@ public class CartService {
         return CartDTO.fromEntity( cart );
     }
 
-    public Pair<CartDTO, String> addItemToCart(AddItemDTO addItemDTO) throws ResourceNotFoundException {
+    public Pair<CartDTO, String> addItemToCart(AddItemDTO addItemDTO) throws ResourceNotFoundException, InsufficientStockException {
         String message = "";
         Cart cart = cartRepository.findById(addItemDTO.cart_id()).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
         Product product = productRepository.findById(addItemDTO.product_id()).orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
         if( product.getStock() < addItemDTO.amount() ){
-            throw new RuntimeException("La cantidad del producto a agregar excede las existencias");
+            throw new InsufficientStockException("La cantidad del producto a agregar excede las existencias","Product");
         }
 
         List<CartItem> cartItemsInCart = cartItemRepository.findByCart( cart );/**/
@@ -73,7 +75,7 @@ public class CartService {
             cartItemRepository.save( newCartItem );
         }else {
             if( (product.getStock() == cartItemInCart.getAmount()) || (product.getStock() < (cartItemInCart.getAmount() + addItemDTO.amount())) ){
-                throw new RuntimeException("La cantidad del producto a agregar excede las existencias");
+                throw new InsufficientStockException("La cantidad del producto a agregar excede las existencias","Product");
             }
             message = "Cantidad aumentada";
             int newAmount = cartItemInCart.getAmount() + addItemDTO.amount();
