@@ -126,7 +126,7 @@ public class PaymentService {
 
     public PaymentIndentResponseDTO createIndent(String userId) throws ResourceNotFoundException, StripeException {
         User user = userService.findById( userId );
-        Stripe.apiKey = "sk_test_51LDHfGCjrtAyA6AHlTaXE88uQjaFPSq0EHYWGbsCIiELO6Jt1n1v8PGBPtl4PRlZrOSpl5gK8XC3xTsiusbZqP8D00sPgDAJA2";
+        //Stripe.apiKey = "YOUR API KEY";
 
         Integer totalInt = user.getCart().getTotal().intValue();
         PaymentIntentCreateParams params =
