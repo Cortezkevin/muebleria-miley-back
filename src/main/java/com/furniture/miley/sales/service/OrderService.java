@@ -36,6 +36,10 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserService userService;
 
+    public Order save(Order order){
+        return orderRepository.save(order);
+    }
+
     public Order findById(String id) throws ResourceNotFoundException {
         return orderRepository.findById( id )
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));

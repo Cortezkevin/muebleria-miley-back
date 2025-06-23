@@ -22,6 +22,8 @@ import com.furniture.miley.config.cloudinary.dto.UploadDTO;
 import com.furniture.miley.config.cloudinary.dto.UploadResultDTO;
 import com.furniture.miley.config.cloudinary.service.CloudinaryService;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
+import com.furniture.miley.purchase.model.Supplier;
+import com.furniture.miley.purchase.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,7 @@ public class ProductService {
 
     private final ProductRepository mRepository;
 
+    private final SupplierService supplierService;
     private final ColorService colorService;
     private final FeatureService featureService;
     private final SubCategoryService subCategoryService;
@@ -89,6 +92,7 @@ public class ProductService {
                 ProductColor productColor = ProductColor.builder()
                         .color(color)
                         .product(product)
+                        .stock(0)
                         .build();
 
                 colorWithImages.images().forEach(colorImage -> {
@@ -138,6 +142,12 @@ public class ProductService {
                 .acquisitionType(AcquisitionType.MANUFACTURED)
                 .build();
 
+        if(createProductDTO.supplierId() != null){
+            Supplier supplier = supplierService.findById(createProductDTO.supplierId());
+            productToCreate.setSupplier(supplier);
+            productToCreate.setAcquisitionType(AcquisitionType.BOUGHT);
+        }
+
         Product newProduct = mRepository.save(productToCreate);
 
         List<UploadDTO> uploadDTOList = new ArrayList<>();
@@ -168,6 +178,12 @@ public class ProductService {
                 .stock(0)
                 .acquisitionType(AcquisitionType.MANUFACTURED)
                 .build();
+
+        if(createProductDTO.supplierId() != null){
+            Supplier supplier = supplierService.findById(createProductDTO.supplierId());
+            productToCreate.setSupplier(supplier);
+            productToCreate.setAcquisitionType(AcquisitionType.BOUGHT);
+        }
 
         Product newProduct = mRepository.save(productToCreate);
         List<UploadDTO> uploadDTOList = new ArrayList<>();

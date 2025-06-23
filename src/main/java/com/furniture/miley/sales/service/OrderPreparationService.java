@@ -207,4 +207,8 @@ public class OrderPreparationService {
     public DetailedPreparationOrder getDetailsById(String id) throws ResourceNotFoundException {
         return DetailedPreparationOrder.toDTO(this.findById( id ));
     }
+
+    public OrderPreparation save(OrderPreparation orderPreparation) {
+        return orderPreparationRepository.save(orderPreparation);
+    }
 }

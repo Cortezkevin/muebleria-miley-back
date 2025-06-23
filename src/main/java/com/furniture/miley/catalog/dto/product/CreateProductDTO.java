@@ -13,6 +13,7 @@ public record CreateProductDTO(
         BigDecimal price,
         Integer stock,
         String subcategoryId,
+        String supplierId,
         List<ProductFeatureDTO> features,
         List<ColorImagesDTO> colorImages
 ) {

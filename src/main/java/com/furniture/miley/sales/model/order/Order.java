@@ -1,6 +1,7 @@
 package com.furniture.miley.sales.model.order;
 
 import com.furniture.miley.sales.enums.OrderStatus;
+import com.furniture.miley.sales.enums.PaymentMethod;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.warehouse.model.ExitGuide;
 import jakarta.persistence.*;
@@ -42,8 +43,8 @@ public class Order {
     private Timestamp cancelledDate;
     private Timestamp completedDate;
 
-    /*@Enumerated( EnumType.STRING )
-    private PaymentMethod paymentMethod;*/
+    @Enumerated( EnumType.STRING )
+    private PaymentMethod paymentMethod;
 
     @OneToOne(mappedBy = "order")
     private OrderShipping orderShipping;

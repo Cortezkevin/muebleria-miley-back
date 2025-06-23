@@ -35,7 +35,7 @@ public class OrderShippingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Entrega de pedido no encontrada"));
     }
 
-    public List<OrderShippingDTO> getAllOrderShipping(){
+    public List<OrderShippingDTO> getAll(){
         Sort sort = Sort.by( Sort.Direction.DESC, "createdDate" );
         return orderShippingRepository.findAll(sort).stream().map(OrderShippingDTO::toDTO).toList();
     }
@@ -92,7 +92,7 @@ public class OrderShippingService {
         orderShipping.setPreparedDate(new Timestamp(new Date().getTime()));
 
         OrderShipping orderShippingUpdated = orderShippingRepository.save( orderShipping );
-        /*"El pedido debe pasar por el estado EN_PREPARACION para continuar"*/
+
         return OrderShippingDTO.toDTO( orderShippingUpdated );
     }
 
