@@ -4,7 +4,7 @@ import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.ResponseDTO;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.exception.customexception.NotMatchPasswordsException;
-import com.furniture.miley.sales.dto.NewUserDTO;
+import com.furniture.miley.security.dto.NewUserDTO;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.security.dto.ChangePasswordDTO;
 import com.furniture.miley.security.dto.JwtTokenDTO;
@@ -14,21 +14,20 @@ import com.furniture.miley.security.service.AuthService;
 import com.furniture.miley.security.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/auth")
 @CrossOrigin
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
-
-    @Autowired
-    private EmailService emailService;
+    private final AuthService authService;
+    private final EmailService emailService;
 
 
     @GetMapping("/getUserFromToken")

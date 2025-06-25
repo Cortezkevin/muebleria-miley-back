@@ -4,14 +4,15 @@ import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.repository.ProductRepository;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.exception.customexception.*;
-import com.furniture.miley.sales.dto.NewUserDTO;
-import com.furniture.miley.sales.model.Address;
+import com.furniture.miley.profile.repository.AddressRepository;
+import com.furniture.miley.profile.repository.PersonalInformationRepository;
+import com.furniture.miley.security.dto.NewUserDTO;
+import com.furniture.miley.profile.model.Address;
 import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.sales.model.cart.CartItem;
-import com.furniture.miley.sales.model.PersonalInformation;
+import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.sales.repository.cart.CartItemRepository;
 import com.furniture.miley.sales.repository.cart.CartRepository;
-import com.furniture.miley.sales.repository.PersonalInformationRepository;
 import com.furniture.miley.security.dto.ChangePasswordDTO;
 import com.furniture.miley.security.dto.JwtTokenDTO;
 import com.furniture.miley.security.dto.LoginUserDTO;
@@ -22,7 +23,6 @@ import com.furniture.miley.security.jwt.JwtProvider;
 import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.Role;
 import com.furniture.miley.security.model.User;
-import com.furniture.miley.security.repository.AddressRepository;
 import com.furniture.miley.security.repository.RoleRepository;
 import com.furniture.miley.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,7 @@ public class AuthService {
         if( user.getStatus().equals(Status.INACTIVO)){
            throw new UnavailableUserException(ResponseMessage.USER_DISABLED, username);
         }
-        return UserDTO.parseToDTO( user );
+        return UserDTO.toDTO( user );
     }
 
     @SneakyThrows
@@ -90,7 +90,7 @@ public class AuthService {
             String token = jwtProvider.generateToken( mainUser );
             return new JwtTokenDTO(
                     token,
-                    UserDTO.parseToDTO( userFound , mainUser )
+                    UserDTO.toDTO( userFound , mainUser )
             );
         } else {
             throw new InvalidCredentialsException("Credenciales invalidas", loginUserDTO.email(), loginUserDTO.password());
@@ -188,7 +188,7 @@ public class AuthService {
 
         return new JwtTokenDTO(
                 token,
-                UserDTO.parseToDTO( userRecent, personalInformationCreated )
+                UserDTO.toDTO( userRecent, personalInformationCreated )
         );
     }
 

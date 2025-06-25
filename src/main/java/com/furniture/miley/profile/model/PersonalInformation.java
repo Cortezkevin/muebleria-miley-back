@@ -1,4 +1,4 @@
-package com.furniture.miley.sales.model;
+package com.furniture.miley.profile.model;
 
 import com.furniture.miley.security.model.User;
 import jakarta.persistence.*;
@@ -20,8 +20,9 @@ public class PersonalInformation {
     private String firstName;
     private String lastName;
     private String phone;
+    private String photoUrl;
     private LocalDate birthdate;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
     @OneToOne(fetch = FetchType.EAGER)
     private Address address;

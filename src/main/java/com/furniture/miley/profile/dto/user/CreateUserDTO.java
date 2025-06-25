@@ -1,16 +1,17 @@
-package com.furniture.miley.sales.dto;
+package com.furniture.miley.profile.dto.user;
 
-import com.furniture.miley.sales.dto.address.MemoryAddressDTO;
-import com.furniture.miley.sales.dto.cart.MemoryCartDTO;
+import com.furniture.miley.security.enums.Status;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record NewUserDTO (
+import java.util.List;
+
+public record CreateUserDTO(
         @NotBlank(message = "Required") String firstName,
         @NotBlank(message = "Required") String lastName,
         @Email(message = "Invalid") String email,
         @NotBlank(message = "Required") String password,
-        MemoryCartDTO memoryCart,
-        MemoryAddressDTO memoryAddress,
-        Boolean isAdmin
-){}
+        Status status,
+        List<String> roles
+) {
+}

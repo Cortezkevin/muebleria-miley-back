@@ -1,4 +1,4 @@
-package com.furniture.miley.sales.dto.address;
+package com.furniture.miley.profile.dto.address;
 
 public record MemoryAddressDTO(
         Double lta,
@@ -10,4 +10,5 @@ public record MemoryAddressDTO(
         String street,
         Integer postalCode,
         String fullAddress
-){}
+) {
+}

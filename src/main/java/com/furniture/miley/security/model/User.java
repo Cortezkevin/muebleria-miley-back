@@ -3,7 +3,7 @@ package com.furniture.miley.security.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.furniture.miley.delivery.model.Carrier;
 import com.furniture.miley.sales.model.cart.Cart;
-import com.furniture.miley.sales.model.PersonalInformation;
+import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.sales.model.order.Order;
 import com.furniture.miley.security.enums.Status;
 import com.furniture.miley.warehouse.model.Grocer;
@@ -46,7 +46,7 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Cart cart;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private PersonalInformation personalInformation;
 
     @OneToOne(mappedBy = "user")

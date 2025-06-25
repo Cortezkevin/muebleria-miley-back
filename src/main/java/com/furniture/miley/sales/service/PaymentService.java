@@ -8,7 +8,7 @@ import com.furniture.miley.sales.dto.payment.PaymentIndentResponseDTO;
 import com.furniture.miley.sales.enums.OrderStatus;
 import com.furniture.miley.sales.enums.PaymentMethod;
 import com.furniture.miley.sales.enums.PreparationStatus;
-import com.furniture.miley.sales.model.Address;
+import com.furniture.miley.profile.model.Address;
 import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.sales.model.order.Invoice;
 import com.furniture.miley.sales.model.order.Order;
@@ -30,7 +30,6 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -126,7 +125,7 @@ public class PaymentService {
 
     public PaymentIndentResponseDTO createIndent(String userId) throws ResourceNotFoundException, StripeException {
         User user = userService.findById( userId );
-
+        Stripe.apiKey = "sk_test_51LDHfGCjrtAyA6AHlTaXE88uQjaFPSq0EHYWGbsCIiELO6Jt1n1v8PGBPtl4PRlZrOSpl5gK8XC3xTsiusbZqP8D00sPgDAJA2";
         Integer totalInt = user.getCart().getTotal().intValue();
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
