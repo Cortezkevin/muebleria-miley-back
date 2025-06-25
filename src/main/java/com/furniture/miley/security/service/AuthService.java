@@ -3,6 +3,7 @@ package com.furniture.miley.security.service;
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.repository.ProductRepository;
 import com.furniture.miley.commons.constants.ResponseMessage;
+import com.furniture.miley.commons.helpers.StripeHelpers;
 import com.furniture.miley.exception.customexception.*;
 import com.furniture.miley.profile.repository.AddressRepository;
 import com.furniture.miley.profile.repository.PersonalInformationRepository;
@@ -181,6 +182,9 @@ public class AuthService {
         PersonalInformation personalInformationCreated = personalInformationRepository.save( newPersonalInformation );
 
         userCreated.setPersonalInformation( personalInformationCreated );
+
+        userCreated.setClientId(StripeHelpers.createStripeClient(userCreated));
+
         User userRecent = userRepository.save( userCreated );
 
         MainUser mainUser = MainUser.build( userRecent );

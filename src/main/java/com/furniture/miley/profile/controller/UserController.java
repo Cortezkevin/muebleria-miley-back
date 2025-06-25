@@ -13,6 +13,7 @@ import com.furniture.miley.security.dto.RoleDTO;
 import com.furniture.miley.security.dto.UserDTO;
 import com.furniture.miley.security.service.RoleService;
 import com.furniture.miley.security.service.UserService;
+import com.stripe.exception.StripeException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,7 +71,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<SuccessResponseDTO<UserDTO>> create(
             @Valid @RequestBody CreateUserDTO createUserDTO
-            ) throws ResourceDuplicatedException, ResourceNotFoundException {
+            ) throws ResourceDuplicatedException, ResourceNotFoundException, StripeException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.CREATED,

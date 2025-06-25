@@ -22,6 +22,7 @@ import com.furniture.miley.warehouse.service.InventoryMovementsService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCancelParams;
 import com.stripe.param.PaymentIntentCreateParams;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -131,25 +132,24 @@ public class PaymentService {
                 PaymentIntentCreateParams.builder()
                         .setAmount(totalInt.longValue() * 100)
                         .setCurrency("pen")
+                        .setCustomer(user.getClientId())
                         .setAutomaticPaymentMethods(
                                 PaymentIntentCreateParams.AutomaticPaymentMethods.builder().setEnabled(true).build()
                         )
-                        /*.setShipping(PaymentIntentCreateParams.Shipping.builder()
-                                .setCarrier("Juan Alberto")
-                                .setName(user.getPersonalInformation().getFullName())
-                                .setPhone(user.getPersonalInformation().getPhone())
-                                .setAddress( PaymentIntentCreateParams.Shipping.Address.builder()
-                                        .setCity( user.getPersonalInformation().getAddress().getDistrict() )
-                                        .setLine1( user.getPersonalInformation().getAddress().getStreet() )
-                                        .setCountry("Peru")
-                                        .setPostalCode( user.getPersonalInformation().getAddress().getPostalCode().toString())
-                                .build())
-                        .build())*/
                         .build();
 
         PaymentIntent paymentIntent = PaymentIntent.create(params);
-        /*"Secreto del client generado"*/
-        return new PaymentIndentResponseDTO( paymentIntent.getClientSecret() );
+
+        return new PaymentIndentResponseDTO( paymentIntent.getClientSecret(), paymentIntent.getId() );
+    }
+
+    public String cancelIntent(String intentId, String reason) throws ResourceNotFoundException, StripeException {
+        Stripe.apiKey = "sk_test_51LDHfGCjrtAyA6AHlTaXE88uQjaFPSq0EHYWGbsCIiELO6Jt1n1v8PGBPtl4PRlZrOSpl5gK8XC3xTsiusbZqP8D00sPgDAJA2";
+        PaymentIntent resource = PaymentIntent.retrieve(intentId);
+        resource.setCancellationReason(reason);
+        PaymentIntentCancelParams params = PaymentIntentCancelParams.builder().build();
+        PaymentIntent paymentIntent = resource.cancel(params);
+        return "Se cancelo la operacion de compra con #ID:" + paymentIntent.getId();
     }
 
     public String generateAndUploadInvoicePDF(String orderId){

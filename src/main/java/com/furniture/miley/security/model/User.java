@@ -26,6 +26,8 @@ public class User {
     @Id
     @GeneratedValue( strategy = GenerationType.UUID )
     private String id;
+    @JsonIgnore
+    private String clientId;
     private String email;
     @JsonIgnore
     private String password;

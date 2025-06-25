@@ -1,6 +1,7 @@
 package com.furniture.miley.security.service;
 
 import com.furniture.miley.catalog.repository.ProductRepository;
+import com.furniture.miley.commons.helpers.StripeHelpers;
 import com.furniture.miley.profile.dto.user.CreateUserDTO;
 import com.furniture.miley.profile.dto.user.UpdateUserDTO;
 import com.furniture.miley.profile.repository.AddressRepository;
@@ -19,6 +20,7 @@ import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.Role;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.repository.UserRepository;
+import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,7 +80,7 @@ public class UserService {
     }
 
 
-    public UserDTO create(CreateUserDTO createUserDTO) throws ResourceNotFoundException, ResourceDuplicatedException {
+    public UserDTO create(CreateUserDTO createUserDTO) throws ResourceNotFoundException, ResourceDuplicatedException, StripeException {
         if( mRepository.existsByEmail(createUserDTO.email()) ) throw new ResourceDuplicatedException(createUserDTO.email() + " ya tiene una cuenta asociada");
 
         Set<Role> roles = new HashSet<>();
@@ -117,7 +119,11 @@ public class UserService {
         userCreated.setPersonalInformation( personalInformationCreated );
         userCreated.setCart( cartCreated );
 
-        return UserDTO.toDTO( mRepository.save( userCreated ) );
+        userCreated.setClientId(StripeHelpers.createStripeClient(userCreated));
+
+        User userRecent = mRepository.save( userCreated );
+
+        return UserDTO.toDTO( userRecent );
     }
 
 

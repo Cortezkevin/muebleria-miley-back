@@ -45,6 +45,20 @@ public class PaymentController {
         return ResponseEntity.status(302).location(ServletUriComponentsBuilder.fromUriString(externalUrl).build().toUri()).build();
     }
 
+    @GetMapping("/cancelIntent/{intentId}")
+    public ResponseEntity<SuccessResponseDTO<String>> cancelPaymentIntent(
+            @PathVariable String intentId,
+            @RequestParam("reason") String reason
+    ) throws StripeException, ResourceNotFoundException {
+        return ResponseEntity.ok(
+                new SuccessResponseDTO<>(
+                        ResponseMessage.SUCCESS,
+                        HttpStatus.OK.name(),
+                        paymentService.cancelIntent( intentId, reason )
+                )
+        );
+    }
+
     @PostMapping("/createIndent")
     public ResponseEntity<SuccessResponseDTO<PaymentIndentResponseDTO>> createPaymentIndent(
             @RequestParam("user") String userId
