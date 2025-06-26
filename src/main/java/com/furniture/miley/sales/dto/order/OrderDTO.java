@@ -1,6 +1,7 @@
 package com.furniture.miley.sales.dto.order;
 
 import com.furniture.miley.sales.enums.OrderStatus;
+import com.furniture.miley.sales.enums.PaymentMethod;
 import com.furniture.miley.sales.enums.PreparationStatus;
 import com.furniture.miley.sales.enums.ShippingStatus;
 import com.furniture.miley.sales.model.order.Order;
@@ -16,7 +17,7 @@ public record OrderDTO(
         Timestamp createdDate,
         Timestamp cancelledDate,
         Timestamp completedDate,
-        //PaymentMethod paymentMethod,
+        PaymentMethod paymentMethod,
         PreparationStatus preparationStatus,
         ShippingStatus shippingStatus,
         OrderStatus status
@@ -30,7 +31,7 @@ public record OrderDTO(
                 order.getCreatedDate(),
                 order.getCancelledDate(),
                 order.getCompletedDate(),
-                //order.getPaymentMethod(),
+                order.getPaymentMethod(),
                 order.getOrderPreparation() != null ? order.getOrderPreparation().getStatus() : PreparationStatus.PENDIENTE,
                 order.getOrderShipping() != null ? order.getOrderShipping().getStatus() : ShippingStatus.PENDIENTE,
                 order.getStatus()

@@ -3,6 +3,7 @@ package com.furniture.miley.sales.dto.order;
 import com.furniture.miley.sales.dto.order.preparation.OrderPreparationDTO;
 import com.furniture.miley.sales.dto.order.shipping.OrderShippingDTO;
 import com.furniture.miley.sales.enums.OrderStatus;
+import com.furniture.miley.sales.enums.PaymentMethod;
 import com.furniture.miley.sales.model.order.Order;
 
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ public record DetailedOrderDTO(
         Timestamp createdDate,
         Timestamp cancelledDate,
         Timestamp completedDate,
-        //PaymentMethod paymentMethod,
+        PaymentMethod paymentMethod,
         OrderPreparationDTO preparation,
         OrderShippingDTO shipping,
         OrderStatus status,
@@ -45,7 +46,7 @@ public record DetailedOrderDTO(
                 order.getCreatedDate(),
                 order.getCancelledDate(),
                 order.getCompletedDate(),
-                //order.getPaymentMethod(),
+                order.getPaymentMethod(),
                 OrderPreparationDTO.toDTO(order.getOrderPreparation()),
                 order.getOrderShipping() != null ? OrderShippingDTO.toDTO(order.getOrderShipping()) : null,
                 order.getStatus(),

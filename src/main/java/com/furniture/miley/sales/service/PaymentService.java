@@ -139,6 +139,7 @@ public class PaymentService {
                         .build();
 
         PaymentIntent paymentIntent = PaymentIntent.create(params);
+        log.info("LASTED CHARGE FROM INTENT: " + paymentIntent.getLatestCharge());
 
         return new PaymentIndentResponseDTO( paymentIntent.getClientSecret(), paymentIntent.getId() );
     }
