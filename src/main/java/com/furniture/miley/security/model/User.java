@@ -1,6 +1,7 @@
 package com.furniture.miley.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.furniture.miley.model.Cart;
 import com.furniture.miley.model.PersonalInformation;
 import com.furniture.miley.security.enums.Status;
 import jakarta.persistence.*;
@@ -37,8 +38,8 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    /*@OneToOne(mappedBy = "user")
-    private Cart cart;*/
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
 
     @OneToOne(mappedBy = "user")
     private PersonalInformation personalInformation;
