@@ -4,6 +4,7 @@ import com.furniture.miley.catalog.dto.subcategory.SubCategoryDTO;
 import com.furniture.miley.catalog.enums.AcquisitionType;
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.model.image.ProductImage;
+import com.furniture.miley.purchase.dto.supplier.SimpleSupplierDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,6 +15,7 @@ public record ProductDTO(
         String description,
         String category,
         SubCategoryDTO subcategory,
+        SimpleSupplierDTO supplier,
         BigDecimal price,
         Integer stock,
         AcquisitionType acquisitionType,
@@ -27,6 +29,7 @@ public record ProductDTO(
                 product.getDescription(),
                 product.getSubCategory().getCategory().getName(),
                 SubCategoryDTO.toDTO(product.getSubCategory()),
+                product.getSupplier() != null ? SimpleSupplierDTO.toDTO(product.getSupplier()) : null,
                 product.getPrice(),
                 product.getStock(),
                 product.getAcquisitionType(),

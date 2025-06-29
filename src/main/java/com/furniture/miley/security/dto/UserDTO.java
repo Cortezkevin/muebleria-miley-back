@@ -16,6 +16,7 @@ public record UserDTO(
         String firstName,
         String lastName,
         String email,
+        String photoUrl,
         Set<String> roles,
         Status status,
         ProfileDTO profile
@@ -26,6 +27,7 @@ public record UserDTO(
                 user.getPersonalInformation().getFirstName(),
                 user.getPersonalInformation().getLastName(),
                 mainUser.getEmail(),
+                user.getPersonalInformation().getPhotoUrl() != null ? user.getPersonalInformation().getPhotoUrl() : "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                 mainUser.getRoles().stream().map(RolName::name).collect(Collectors.toSet()),
                 user.getStatus(),
                 new ProfileDTO(
@@ -42,6 +44,7 @@ public record UserDTO(
                 personalInformation.getFirstName(),
                 personalInformation.getLastName(),
                 user.getEmail(),
+                user.getPersonalInformation().getPhotoUrl() != null ? user.getPersonalInformation().getPhotoUrl() : "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                 user.getRoles().stream().map(Role::getRolName).map(RolName::name).collect(Collectors.toSet()),
                 user.getStatus(),
                 new ProfileDTO(
@@ -58,6 +61,7 @@ public record UserDTO(
                 user.getPersonalInformation().getFirstName(),
                 user.getPersonalInformation().getLastName(),
                 user.getEmail(),
+                user.getPersonalInformation().getPhotoUrl() != null ? user.getPersonalInformation().getPhotoUrl() : "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                 user.getRoles().stream().map(Role::getRolName).map(RolName::name).collect(Collectors.toSet()),
                 user.getStatus(),
                 new ProfileDTO(
