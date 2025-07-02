@@ -29,4 +29,3 @@ jwt:
   expiration: 36000
 front:
   url: http://localhost:3000
-
