@@ -7,17 +7,13 @@ import com.furniture.miley.commons.helpers.StripeHelpers;
 import com.furniture.miley.exception.customexception.*;
 import com.furniture.miley.profile.repository.AddressRepository;
 import com.furniture.miley.profile.repository.PersonalInformationRepository;
-import com.furniture.miley.security.dto.NewUserDTO;
+import com.furniture.miley.security.dto.*;
 import com.furniture.miley.profile.model.Address;
 import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.sales.model.cart.CartItem;
 import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.sales.repository.cart.CartItemRepository;
 import com.furniture.miley.sales.repository.cart.CartRepository;
-import com.furniture.miley.security.dto.ChangePasswordDTO;
-import com.furniture.miley.security.dto.JwtTokenDTO;
-import com.furniture.miley.security.dto.LoginUserDTO;
-import com.furniture.miley.security.dto.UserDTO;
 import com.furniture.miley.security.enums.RolName;
 import com.furniture.miley.security.enums.Status;
 import com.furniture.miley.security.jwt.JwtProvider;
@@ -74,7 +70,7 @@ public class AuthService {
     }
 
     @SneakyThrows
-    public JwtTokenDTO loginUser(LoginUserDTO loginUserDTO ){
+    public SessionDTO loginUser(LoginUserDTO loginUserDTO ){
         User userFound = userRepository.findByEmail(loginUserDTO.email()).orElseThrow(() -> new ResourceNotFoundException("Email no existente"));
         if( userFound.getStatus().equals(Status.INACTIVO)){
             throw new UnavailableUserException(ResponseMessage.USER_DISABLED, userFound.getEmail());
@@ -89,17 +85,15 @@ public class AuthService {
             MainUser mainUser = MainUser.build( userFound );
 
             String token = jwtProvider.generateToken( mainUser );
-            return new JwtTokenDTO(
-                    token,
-                    UserDTO.toDTO( userFound , mainUser )
-            );
+
+            return SessionDTO.toDTO(userFound, token);
         } else {
             throw new InvalidCredentialsException("Credenciales invalidas", loginUserDTO.email(), loginUserDTO.password());
         }
     }
 
     @SneakyThrows
-    public JwtTokenDTO registerUser(NewUserDTO newUserDTO ){
+    public SessionDTO registerUser(NewUserDTO newUserDTO ){
         if( userRepository.existsByEmail(newUserDTO.email()) ) throw new ResourceDuplicatedException(newUserDTO.email() + " ya tiene una cuenta asociada");
 
         Role roleAdmin = roleRepository.findByRolName( RolName.ROLE_ADMIN ).orElseThrow(() -> new ResourceNotFoundException(("Rol admin no existe")));
@@ -190,10 +184,7 @@ public class AuthService {
         MainUser mainUser = MainUser.build( userRecent );
         String token = jwtProvider.generateToken( mainUser );
 
-        return new JwtTokenDTO(
-                token,
-                UserDTO.toDTO( userRecent, personalInformationCreated )
-        );
+        return SessionDTO.toDTO(userRecent, token);
     }
 
     public String changePassword(ChangePasswordDTO dto) throws ResourceNotFoundException, NotMatchPasswordsException {

@@ -162,4 +162,11 @@ public class CartService {
         return  CartDTO.fromEntity(cartUpdated);
     }
 
+    public CartDTO getFromSession() throws ResourceNotFoundException {
+        MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByEmail(mainUser.getEmail()).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        Cart cart = cartRepository.findByUser( user ).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
+
+        return CartDTO.fromEntity( cart );
+    }
 }

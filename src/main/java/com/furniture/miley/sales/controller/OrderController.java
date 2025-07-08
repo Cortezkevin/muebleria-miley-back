@@ -48,7 +48,7 @@ public class OrderController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
     @GetMapping("/preparation")
     public ResponseEntity<SuccessResponseDTO<List<OrderPreparationDTO>>> findAllPreparationOrders(){
         List<OrderPreparationDTO> orderPreparationDTOList = orderPreparationService.getAll();
@@ -63,7 +63,7 @@ public class OrderController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
     @GetMapping("/shipping")
     public ResponseEntity<SuccessResponseDTO<List<OrderShippingDTO>>> findAllShippingOrders(){
         List<OrderShippingDTO> orderShippingDTOList = orderShippingService.getAll();
@@ -155,7 +155,7 @@ public class OrderController {
                 .body(new ByteArrayResource(invoiceDTO.resource()));
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
     @PostMapping("/shipping/start")
     public ResponseEntity<SuccessResponseDTO<OrderShippingDTO>> startShippingOrder(
             @RequestBody StartOrderShippingDTO startOrderShippingDTO
@@ -170,7 +170,7 @@ public class OrderController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
     @PostMapping("/shipping/prepare")
     public ResponseEntity<SuccessResponseDTO<OrderShippingDTO>> checkPrepareShippingOrder(
             @RequestBody PreparedOrderShippingDTO preparedOrderShippingDTO
@@ -185,7 +185,7 @@ public class OrderController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
     @PostMapping("/shipping/transit")
     public ResponseEntity<SuccessResponseDTO<OrderShippingDTO>> checkTransitShippingOrder(
             @RequestBody TransitOrderShippingDTO transitOrderShippingDTO
@@ -199,7 +199,7 @@ public class OrderController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
     @PostMapping("/shipping/complete")
     public ResponseEntity<SuccessResponseDTO<OrderShippingDTO>> completeShippingOrder(
             @RequestBody CompleteOrderShippingDTO completeOrderShippingDTO
@@ -213,7 +213,7 @@ public class OrderController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
     @PostMapping("/preparation/start")
     public ResponseEntity<SuccessResponseDTO<OrderPreparationDTO>> startPreparationOrder(
             @RequestBody StartOrderPreparationDTO startOrderPreparationDTO
@@ -228,7 +228,7 @@ public class OrderController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
     @PostMapping("/preparation/packaging")
     public ResponseEntity<SuccessResponseDTO<OrderPreparationDTO>> checkPackagingPreparationOrder(
             @RequestBody PackagingOrderPreparationDTO packagingOrderPreparationDTO
@@ -243,7 +243,7 @@ public class OrderController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_WAREHOUSE','ROLE_ADMIN')")
     @PostMapping("/preparation/complete")
     public ResponseEntity<SuccessResponseDTO<OrderPreparationDTO>> completePreparationOrder(
             @RequestBody CompletedOrderPreparationDTO completedOrderPreparationDTO

@@ -30,4 +30,5 @@ public class ResponseMessage {
     public static final String PURCHASE_ORDER_CREATED = "Orden de compra creada";
     public static final String STARTED_RECEPTION_ORDER = "Proceso de Recepcion de orden de pedido iniciada correctamente";
     public static final String REVIEW_RECEPTION_ORDER = "Orden de compra revisado correctamente";
+    public static final String COMPLETED_RECEPTION_ORDER = "Orden de compra recepcionado correctamente";
 }

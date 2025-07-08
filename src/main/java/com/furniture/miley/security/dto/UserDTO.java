@@ -7,6 +7,8 @@ import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.security.model.Role;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.enums.RolName;
+import com.furniture.miley.warehouse.dto.carrier.CarrierDTO;
+import com.furniture.miley.warehouse.dto.grocer.GrocerDTO;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,7 +21,8 @@ public record UserDTO(
         String photoUrl,
         Set<String> roles,
         Status status,
-        ProfileDTO profile
+        ProfileDTO profile,
+        Object roleExtraData
 ){
     public static UserDTO toDTO(User user, MainUser mainUser) {
         return new UserDTO(
@@ -34,7 +37,8 @@ public record UserDTO(
                         user.getPersonalInformation().getBirthdate() != null ? user.getPersonalInformation().getBirthdate().toString() : "",
                         user.getPersonalInformation().getAddress() != null ? AddressDTO.toDTO(user.getPersonalInformation().getAddress()) : null,
                         user.getPersonalInformation().getPhone() != null ? user.getPersonalInformation().getPhone() : ""
-                )
+                ),
+                user.getGrocer() != null ? GrocerDTO.toDTO(user.getGrocer()) : user.getCarrier() != null ? CarrierDTO.toDTO(user.getCarrier()) : null
         );
     }
 
@@ -51,7 +55,8 @@ public record UserDTO(
                         user.getPersonalInformation().getBirthdate() != null ? user.getPersonalInformation().getBirthdate().toString() : "",
                         user.getPersonalInformation().getAddress() != null ? AddressDTO.toDTO( user.getPersonalInformation().getAddress() ) : null,
                         user.getPersonalInformation().getPhone() != null ? user.getPersonalInformation().getPhone() : ""
-                )
+                ),
+                user.getGrocer() != null ? GrocerDTO.toDTO(user.getGrocer()) : user.getCarrier() != null ? CarrierDTO.toDTO(user.getCarrier()) : null
         );
     }
 
@@ -68,7 +73,8 @@ public record UserDTO(
                         user.getPersonalInformation().getBirthdate() != null ? user.getPersonalInformation().getBirthdate().toString() : "",
                         user.getPersonalInformation().getAddress() != null ? AddressDTO.toDTO( user.getPersonalInformation().getAddress() ) : null,
                         user.getPersonalInformation().getPhone() != null ? user.getPersonalInformation().getPhone() : ""
-                )
+                ),
+                user.getGrocer() != null ? GrocerDTO.toDTO(user.getGrocer()) : user.getCarrier() != null ? CarrierDTO.toDTO(user.getCarrier()) : null
         );
     }
 }

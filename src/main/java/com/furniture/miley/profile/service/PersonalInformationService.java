@@ -2,13 +2,16 @@ package com.furniture.miley.profile.service;
 
 import com.furniture.miley.config.cloudinary.service.CloudinaryService;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
+import com.furniture.miley.profile.dto.information.PersonalDataDTO;
 import com.furniture.miley.profile.dto.user.UpdateProfile;
 import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.profile.repository.PersonalInformationRepository;
 import com.furniture.miley.security.dto.UserDTO;
+import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -57,4 +60,9 @@ public class PersonalInformationService {
         return UserDTO.toDTO(userService.save( user ));
     }
 
+    public PersonalDataDTO getFromSession() throws ResourceNotFoundException {
+        MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByEmail(mainUser.getEmail());
+        return PersonalDataDTO.parseToDTO(user.getPersonalInformation());
+    }
 }

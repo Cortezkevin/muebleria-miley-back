@@ -24,13 +24,13 @@ public class CartController {
 
     @GetMapping("/fromUser")
     public ResponseEntity<SuccessResponseDTO<CartDTO>> getCartFromSession(
-            @RequestParam(name = "user") String userId
+            //@RequestParam(name = "user") String userId
     ) throws ResourceNotFoundException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.PRODUCT_ADDED_TO_CART,
                         HttpStatus.OK.name(),
-                        cartService.getCartFromUser( userId )
+                        cartService.getFromSession()
                 )
         );
     }

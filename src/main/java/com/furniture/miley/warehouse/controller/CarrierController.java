@@ -52,7 +52,7 @@ public class CarrierController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TRANSPORT')")
+    @PreAuthorize("hasAnyAuthority('ROLE_TRANSPORT','ROLE_ADMIN')")
     @PostMapping("/available/{carrierId}")
     public ResponseEntity<SuccessResponseDTO<CarrierDTO>> changeStatus(
             @PathVariable String carrierId

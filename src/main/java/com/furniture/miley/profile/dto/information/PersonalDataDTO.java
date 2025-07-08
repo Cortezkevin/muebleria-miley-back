@@ -4,14 +4,14 @@ import com.furniture.miley.profile.model.PersonalInformation;
 
 import java.time.LocalDate;
 
-public record PersonalInformationDTO(
+public record PersonalDataDTO(
         String firstName,
         String lastName,
         String phone,
         LocalDate birthdate
 ) {
-    public static PersonalInformationDTO parseToDTO(PersonalInformation personalInformationUpdated) {
-        return new PersonalInformationDTO(
+    public static PersonalDataDTO parseToDTO(PersonalInformation personalInformationUpdated) {
+        return new PersonalDataDTO(
                 personalInformationUpdated.getFirstName(),
                 personalInformationUpdated.getLastName(),
                 personalInformationUpdated.getPhone(),

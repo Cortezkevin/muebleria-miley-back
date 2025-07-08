@@ -6,9 +6,11 @@ import com.furniture.miley.profile.dto.address.AddressDTO;
 import com.furniture.miley.profile.model.Address;
 import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.profile.repository.AddressRepository;
+import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -89,5 +91,11 @@ public class AddressService {
         PersonalInformation personalInformation = personalInformationService.findByUser( user );
         Address address = this.findByPersonalInformation( personalInformation );
         return AddressDTO.toDTO( address );
+    }
+
+    public AddressDTO getFromSession() throws ResourceNotFoundException {
+        MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByEmail(mainUser.getEmail());
+        return AddressDTO.toDTO( this.findByPersonalInformation(user.getPersonalInformation()));
     }
 }

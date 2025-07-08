@@ -4,12 +4,8 @@ import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.ResponseDTO;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.exception.customexception.NotMatchPasswordsException;
-import com.furniture.miley.security.dto.NewUserDTO;
+import com.furniture.miley.security.dto.*;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
-import com.furniture.miley.security.dto.ChangePasswordDTO;
-import com.furniture.miley.security.dto.JwtTokenDTO;
-import com.furniture.miley.security.dto.LoginUserDTO;
-import com.furniture.miley.security.dto.UserDTO;
 import com.furniture.miley.security.service.AuthService;
 import com.furniture.miley.security.service.EmailService;
 import jakarta.mail.MessagingException;
@@ -54,7 +50,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SuccessResponseDTO<JwtTokenDTO>> loginUser(@Valid @RequestBody LoginUserDTO loginUserDTO){
+    public ResponseEntity<SuccessResponseDTO<SessionDTO>> loginUser(@Valid @RequestBody LoginUserDTO loginUserDTO){
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.LOGGED,
@@ -65,7 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<SuccessResponseDTO<JwtTokenDTO>> registerUser(@RequestBody NewUserDTO newUserDTO){
+    public ResponseEntity<SuccessResponseDTO<SessionDTO>> registerUser(@RequestBody NewUserDTO newUserDTO){
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.REGISTER,

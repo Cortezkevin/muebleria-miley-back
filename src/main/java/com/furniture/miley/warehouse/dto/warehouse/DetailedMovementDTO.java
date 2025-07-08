@@ -17,7 +17,7 @@ public record DetailedMovementDTO (
         Timestamp date,
         String reason,
         RawMaterialDTO rawMaterial,
-        ProductDTO productDTO,
+        ProductDTO product,
         String warehouse,
         String guide
 ){

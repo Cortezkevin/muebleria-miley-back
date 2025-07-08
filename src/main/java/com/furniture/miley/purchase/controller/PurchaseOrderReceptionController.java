@@ -86,7 +86,7 @@ public class PurchaseOrderReceptionController {
             ) throws ResourceNotFoundException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
-                        ResponseMessage.SUCCESS,
+                        ResponseMessage.COMPLETED_RECEPTION_ORDER,
                         HttpStatus.OK.name(),
                         purchaseOrderReceptionService.acceptOrRejectOrderMaterials( id, acceptAndRejectPurchaseOrderDTO )
                 )

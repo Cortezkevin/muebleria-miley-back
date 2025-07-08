@@ -4,6 +4,8 @@ import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.config.cloudinary.utils.UploadUtils;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
+import com.furniture.miley.profile.dto.address.AddressDTO;
+import com.furniture.miley.profile.dto.information.PersonalDataDTO;
 import com.furniture.miley.profile.dto.user.UpdateProfile;
 import com.furniture.miley.profile.service.PersonalInformationService;
 import com.furniture.miley.security.dto.UserDTO;
@@ -24,6 +26,18 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PersonalInformationController {
     private final PersonalInformationService personalInformationService;
+
+    @GetMapping("/fromSession")
+    public ResponseEntity<SuccessResponseDTO<PersonalDataDTO>> getFromSession() throws ResourceNotFoundException {
+        return ResponseEntity.ok(
+                new SuccessResponseDTO<>(
+                        ResponseMessage.PRODUCT_ADDED_TO_CART,
+                        HttpStatus.OK.name(),
+                        personalInformationService.getFromSession()
+                )
+        );
+    }
+
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PutMapping( consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
