@@ -22,10 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     private final CartService cartService;
 
-    @GetMapping("/fromUser")
-    public ResponseEntity<SuccessResponseDTO<CartDTO>> getCartFromSession(
-            //@RequestParam(name = "user") String userId
-    ) throws ResourceNotFoundException {
+    @GetMapping("/fromSession")
+    public ResponseEntity<SuccessResponseDTO<CartDTO>> getCartFromSession() throws ResourceNotFoundException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.PRODUCT_ADDED_TO_CART,

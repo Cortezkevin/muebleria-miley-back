@@ -67,6 +67,17 @@ public class UserController {
         );
     }
 
+    @GetMapping("/extraRoleData")
+    public ResponseEntity<SuccessResponseDTO<Object>> getExtraRoleData() throws ResourceNotFoundException {
+        return ResponseEntity.ok(
+                new SuccessResponseDTO<>(
+                        ResponseMessage.SUCCESS,
+                        HttpStatus.OK.name(),
+                        userService.getExtraRoleData()
+                )
+        );
+    }
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<SuccessResponseDTO<UserDTO>> create(

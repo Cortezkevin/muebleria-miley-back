@@ -20,6 +20,8 @@ import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.Role;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.repository.UserRepository;
+import com.furniture.miley.warehouse.dto.carrier.CarrierDTO;
+import com.furniture.miley.warehouse.dto.grocer.GrocerDTO;
 import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -152,4 +154,15 @@ public class UserService {
         return UserDTO.toDTO(mRepository.save( user ));
     }
 
+    public Object getExtraRoleData() throws ResourceNotFoundException {
+        MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = this.findByEmail(mainUser.getEmail());
+        if(user.getGrocer() != null){
+            return GrocerDTO.toDTO(user.getGrocer());
+        }else if(user.getCarrier() != null) {
+            return CarrierDTO.toDTO(user.getCarrier());
+        }else {
+            return null;
+        }
+    }
 }
