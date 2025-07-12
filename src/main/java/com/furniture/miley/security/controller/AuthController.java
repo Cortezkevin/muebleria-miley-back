@@ -11,11 +11,13 @@ import com.furniture.miley.security.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +27,6 @@ public class AuthController {
     private final AuthService authService;
     private final EmailService emailService;
 
-
     @GetMapping("/getUserFromToken")
     public ResponseEntity<SuccessResponseDTO<UserDTO>> getUserFromToken(@RequestHeader(name = "Authorization") String tokenHeader){
         String token = tokenHeader.length() > 7 ? tokenHeader.substring(7) : "no token";
@@ -34,6 +35,21 @@ public class AuthController {
                         ResponseMessage.SUCCESS,
                         HttpStatus.OK.name(),
                         authService.getUserFromToken(token)
+                )
+        );
+    }
+
+    @PutMapping("/device-token/{userId}")
+    public ResponseEntity<SuccessResponseDTO<String>> saveDeviceToken(
+            @PathVariable("userId") String userId,
+            @RequestParam(name = "token") String token
+    ) throws ResourceNotFoundException {
+        log.info("Calling saveDeviceToken {}",token);
+        return ResponseEntity.ok(
+                new SuccessResponseDTO<>(
+                        ResponseMessage.SUCCESS,
+                        HttpStatus.OK.name(),
+                        authService.saveDeviceToken(userId, token)
                 )
         );
     }

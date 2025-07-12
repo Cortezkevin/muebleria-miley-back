@@ -24,6 +24,7 @@ import com.furniture.miley.security.repository.RoleRepository;
 import com.furniture.miley.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -112,8 +114,12 @@ public class AuthService {
                 .roles( roles )
                 .status(Status.ACTIVO)
                 .build();
-        User userCreated = userRepository.save(newUser);
 
+        if( newUserDTO.notificationToken() != null ) {
+            newUser.setNotificationToken(newUserDTO.notificationToken());
+        }
+
+        User userCreated = userRepository.save(newUser);
 
         Cart newCart = Cart.createEmpty();
         newCart.setUser( userCreated );
@@ -197,5 +203,12 @@ public class AuthService {
         }else {
             throw new NotMatchPasswordsException("Las contraseñas ingresadas no coinciden", dto.password(), dto.confirmPassword());
         }
+    }
+
+    public String saveDeviceToken(String userId, String token) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        user.setNotificationToken(token);
+        userRepository.save(user);
+        return "Token del dispositivo de usuario guardado";
     }
 }

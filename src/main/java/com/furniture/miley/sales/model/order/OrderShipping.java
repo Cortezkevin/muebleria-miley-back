@@ -23,6 +23,7 @@ public class OrderShipping {
     private Double distance = 0.0;
     private Double destinationLat;
     private Double destinationLng;
+    private Boolean confirmFromUser;
     private Timestamp createdDate;
     private Timestamp startDate;
     private Timestamp preparedDate;

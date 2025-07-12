@@ -33,6 +33,8 @@ public class User {
     private String password;
     @JsonIgnore
     private String tokenPassword;
+    @JsonIgnore
+    private String notificationToken;
 
     @Enumerated( EnumType.STRING )
     private Status status;

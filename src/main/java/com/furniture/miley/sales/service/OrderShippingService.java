@@ -10,10 +10,13 @@ import com.furniture.miley.sales.enums.ShippingStatus;
 import com.furniture.miley.sales.model.order.Order;
 import com.furniture.miley.sales.model.order.OrderShipping;
 import com.furniture.miley.sales.repository.order.OrderShippingRepository;
+import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.service.UserService;
+import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -39,6 +42,15 @@ public class OrderShippingService {
         Sort sort = Sort.by( Sort.Direction.DESC, "createdDate" );
         return orderShippingRepository.findAll(sort).stream().map(OrderShippingDTO::toDTO).toList();
     }
+
+    public List<OrderShippingDTO> getAllReadyToSend(){
+        Sort sort = Sort.by( Sort.Direction.DESC, "createdDate" );
+        return orderShippingRepository.findAll(sort).stream()
+                .filter(orderShipping -> orderShipping.getStatus().equals(ShippingStatus.PREPARADO))
+                .map(OrderShippingDTO::toDTO)
+                .toList();
+    }
+
 
     public OrderShippingDTO startShippingOrder(StartOrderShippingDTO startOrderShippingDTO) throws ResourceNotFoundException, AbortedProcessException, AlreadyStartedProcessException, FinishCurrentProcessException {
         Order order = orderService.findById(startOrderShippingDTO.orderId());
@@ -117,6 +129,8 @@ public class OrderShippingService {
         orderShipping.setCarrier( carrier );
         orderShipping.setOrder(order);
 
+        /*TODO: NOTIFICAR AL CLIENTE QUE SU PEDIDO YA INICIO EL RECORRIDO*/
+
         OrderShipping orderShippingUpdated = orderShippingRepository.save( orderShipping );
         /*"Se inicio el envio del Pedido"*/
         return OrderShippingDTO.toDTO( orderShippingUpdated );
@@ -144,6 +158,8 @@ public class OrderShippingService {
         orderShipping.setCarrier( carrier );
         orderShipping.setOrder(order);
 
+        /*TODO: NOTIFICAR AL CLIENTE QUE SU PEDIDO YA LLEGO A SU DESTINO Y CONFIRMAR LA RECEPCION DE SU PEDIDO*/
+
         OrderShipping orderShippingUpdated = orderShippingRepository.save( orderShipping );
         /*"Proceso de envio culminado, se entrego el pedido."*/
         return OrderShippingDTO.toDTO( orderShippingUpdated );
@@ -152,5 +168,38 @@ public class OrderShippingService {
     public DetailedShippingOrder getDetailsById(String id) throws ResourceNotFoundException {
         OrderShipping orderShipping = this.findById( id );
         return DetailedShippingOrder.toDTO(orderShipping);
+    }
+
+    public String confirmOrderReception(String orderId) throws ResourceNotFoundException {
+        Order order = orderService.findById( orderId );
+        OrderShipping orderShipping = orderShippingRepository.findByOrder(order).orElseThrow(() -> new ResourceNotFoundException("Entrega de pedido no encontrado"));
+        orderShipping.setConfirmFromUser(true);
+        return "Se confirmo la recepcio del pedido";
+    }
+
+    public void sendTestNotification(String title) throws ResourceNotFoundException, FirebaseMessagingException {
+        MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByEmail(mainUser.getEmail());
+        if( user.getNotificationToken() != null ){
+            String userRegistrationToken = user.getNotificationToken();
+            Message message = Message.builder()
+                    .setNotification(
+                            Notification.builder()
+                                    .setTitle(title)
+                                    .setBody("Esta es una notificacion de prueba")
+                                    .build()
+                    )
+                    /*.setAndroidConfig(
+                            AndroidConfig.builder()
+                                    .setNotification(AndroidNotification.builder()
+                                            .setClickAction("order_intent")
+                                            .build())
+                                    .build()
+                    )*/
+                    .setToken(userRegistrationToken)
+                    .build();
+            String response = FirebaseMessaging.getInstance().send(message);
+            System.out.println("Successfully sent message: " + response);
+        }
     }
 }

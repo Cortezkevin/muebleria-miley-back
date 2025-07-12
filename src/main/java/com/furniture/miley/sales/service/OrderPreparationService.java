@@ -24,6 +24,7 @@ import com.furniture.miley.warehouse.repository.ExitGuideRepository;
 import com.furniture.miley.warehouse.repository.InventoryMovementsRepository;
 import com.furniture.miley.warehouse.service.GrocerService;
 import com.furniture.miley.warehouse.service.WarehouseService;
+import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -120,7 +121,7 @@ public class OrderPreparationService {
         return OrderPreparationDTO.toDTO( orderPreparationUpdated );
     }
 
-    public OrderPreparationDTO checkOrderPreparationCompleted(CompletedOrderPreparationDTO completedOrderPreparationDTO) throws ResourceNotFoundException, AbortedProcessException {
+    public OrderPreparationDTO checkOrderPreparationCompleted(CompletedOrderPreparationDTO completedOrderPreparationDTO) throws ResourceNotFoundException, AbortedProcessException, FirebaseMessagingException {
         OrderPreparation orderPreparation = this.findById( completedOrderPreparationDTO.orderPreparationId() );
         Grocer grocer = grocerService.findById( orderPreparation.getGrocer().getId() );
         Order order = orderService.findById( orderPreparation.getOrder().getId() );
@@ -200,6 +201,30 @@ public class OrderPreparationService {
 
         //orderRepository.save( order );
         OrderPreparation orderPreparationUpdated = orderPreparationRepository.save( orderPreparation );
+
+        if( order.getUser().getNotificationToken() != null ){
+            String userRegistrationToken = order.getUser().getNotificationToken();
+            Message message = Message.builder()
+                    .putData("order_id",order.getId())
+                    .setNotification(
+                            Notification.builder()
+                                    .setTitle("Su pedido ya esta preparado")
+                                    .setBody("Su pedido ya esta listo para iniciar con el envio, puede verificar el estado aqui")
+                                    .build()
+                    )
+                    .setAndroidConfig(
+                            AndroidConfig.builder()
+                                    .setNotification(AndroidNotification.builder()
+                                            .setClickAction("order_intent")
+                                            .build())
+                                    .build()
+                    )
+                    .setToken(userRegistrationToken)
+                    .build();
+            String response = FirebaseMessaging.getInstance().send(message);
+            System.out.println("Successfully sent message: " + response);
+        }
+
         /*"Se completo el proceso de preparacion del pedido"*/
         return OrderPreparationDTO.toDTO( orderPreparationUpdated );
     }

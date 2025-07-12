@@ -31,4 +31,5 @@ public class ResponseMessage {
     public static final String STARTED_RECEPTION_ORDER = "Proceso de Recepcion de orden de pedido iniciada correctamente";
     public static final String REVIEW_RECEPTION_ORDER = "Orden de compra revisado correctamente";
     public static final String COMPLETED_RECEPTION_ORDER = "Orden de compra recepcionado correctamente";
+    public static final String CONFIRMED_ORDER_RECEPTION = "Confirmacion de recepcion de pedido satisfactoria";
 }

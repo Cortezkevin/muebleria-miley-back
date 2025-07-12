@@ -5,7 +5,6 @@ import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.profile.dto.address.AddressDTO;
 import com.furniture.miley.profile.service.AddressService;
-import com.furniture.miley.sales.dto.cart.CartDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
