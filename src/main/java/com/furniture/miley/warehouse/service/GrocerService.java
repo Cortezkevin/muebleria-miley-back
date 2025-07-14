@@ -27,6 +27,10 @@ public class GrocerService {
     private final UserService userService;
     private final RoleService roleService;
 
+    public List<Grocer> findAll(){
+        return grocerRepository.findAll();
+    }
+
     public Grocer findById(String id) throws ResourceNotFoundException {
         return grocerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Almacenero no encontrado","Grocer"));
@@ -37,7 +41,7 @@ public class GrocerService {
     }
 
     public List<GrocerDTO> getAll(){
-        return grocerRepository.findAll().stream().map(GrocerDTO::toDTO).toList();
+        return this.findAll().stream().map(GrocerDTO::toDTO).toList();
     }
 
     public GrocerDTO create(NewGrocerDTO newGrocerDTO) throws ResourceNotFoundException {

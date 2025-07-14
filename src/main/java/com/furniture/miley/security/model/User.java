@@ -2,6 +2,7 @@ package com.furniture.miley.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.furniture.miley.delivery.model.Carrier;
+import com.furniture.miley.profile.model.Notification;
 import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.sales.model.order.Order;
@@ -34,7 +35,9 @@ public class User {
     @JsonIgnore
     private String tokenPassword;
     @JsonIgnore
-    private String notificationToken;
+    private String notificationMobileToken;
+    @JsonIgnore
+    private String notificationWebToken;
 
     @Enumerated( EnumType.STRING )
     private Status status;
@@ -46,6 +49,14 @@ public class User {
             inverseJoinColumns = @JoinColumn( name = "role_id", nullable = false)
     )
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_notifications",
+            joinColumns = @JoinColumn( name = "user_id", nullable = false),
+            inverseJoinColumns = @JoinColumn( name = "notification_id", nullable = false)
+    )
+    private Set<Notification> notifications = new HashSet<>();
 
     @OneToOne(mappedBy = "user")
     private Cart cart;

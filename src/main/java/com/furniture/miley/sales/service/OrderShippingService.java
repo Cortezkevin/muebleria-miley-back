@@ -4,6 +4,8 @@ import com.furniture.miley.delivery.enums.CarrierStatus;
 import com.furniture.miley.delivery.model.Carrier;
 import com.furniture.miley.delivery.service.CarrierService;
 import com.furniture.miley.exception.customexception.*;
+import com.furniture.miley.profile.dto.notification.NewNotificationDTO;
+import com.furniture.miley.profile.service.NotificationService;
 import com.furniture.miley.sales.dto.order.shipping.*;
 import com.furniture.miley.sales.enums.OrderStatus;
 import com.furniture.miley.sales.enums.ShippingStatus;
@@ -14,6 +16,7 @@ import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.service.UserService;
 import com.google.firebase.messaging.*;
+import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +35,7 @@ public class OrderShippingService {
     private final CarrierService carrierService;
     private final OrderService orderService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public OrderShipping findById(String id) throws ResourceNotFoundException {
         return orderShippingRepository.findById(id)
@@ -108,7 +112,7 @@ public class OrderShippingService {
         return OrderShippingDTO.toDTO( orderShippingUpdated );
     }
 
-    public OrderShippingDTO checkOrderShippingTransit(TransitOrderShippingDTO transitOrderShippingDTO) throws ResourceNotFoundException, AbortedProcessException {
+    public OrderShippingDTO checkOrderShippingTransit(TransitOrderShippingDTO transitOrderShippingDTO) throws ResourceNotFoundException, AbortedProcessException, StripeException, FirebaseMessagingException {
         OrderShipping orderShipping = this.findById( transitOrderShippingDTO.orderShippingId() );
         Carrier carrier = carrierService.findById( orderShipping.getCarrier().getId() );
         Order order = orderService.findById( orderShipping.getOrder().getId() );
@@ -130,6 +134,23 @@ public class OrderShippingService {
         orderShipping.setOrder(order);
 
         /*TODO: NOTIFICAR AL CLIENTE QUE SU PEDIDO YA INICIO EL RECORRIDO*/
+        if( order.getUser().getNotificationWebToken() != null || order.getUser().getNotificationMobileToken() != null ){
+            /*NotificationHelpers.sendNotification(
+                    order.getUser(),
+                    "Pedido en camino",
+                    "Su pedido ya inicio el recorrido para llegar a sus manos, haga seguimiento tocando este mensaje.",
+                    null,
+                    "order-intent"
+            );*/
+            notificationService.sendNotificationTo(
+                    order.getUser(),
+                    new NewNotificationDTO(
+                            "Pedido en camino",
+                            "Su pedido ya inicio el recorrido para llegar a sus manos, haga seguimiento tocando este mensaje.",
+                            null
+                    )
+            );
+        }
 
         OrderShipping orderShippingUpdated = orderShippingRepository.save( orderShipping );
         /*"Se inicio el envio del Pedido"*/
@@ -180,8 +201,8 @@ public class OrderShippingService {
     public void sendTestNotification(String title) throws ResourceNotFoundException, FirebaseMessagingException {
         MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByEmail(mainUser.getEmail());
-        if( user.getNotificationToken() != null ){
-            String userRegistrationToken = user.getNotificationToken();
+        if( user.getNotificationMobileToken() != null || user.getNotificationWebToken() != null){
+            String userRegistrationToken = user.getNotificationMobileToken();
             Message message = Message.builder()
                     .setNotification(
                             Notification.builder()

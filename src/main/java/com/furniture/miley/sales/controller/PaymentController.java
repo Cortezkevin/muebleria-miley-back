@@ -6,6 +6,7 @@ import com.furniture.miley.exception.customexception.ResourceNotFoundException;
 import com.furniture.miley.sales.dto.payment.PaymentIndentResponseDTO;
 import com.furniture.miley.sales.service.CartService;
 import com.furniture.miley.sales.service.PaymentService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class PaymentController {
             @RequestParam("user") String userId,
             @RequestParam(name = "note", required = false, defaultValue = "No agrego comentarios adicionales") String note,
             @RequestParam(name = "specificAddress", required = false, defaultValue = "No se especifico la direccion") String specificAddress
-    ) throws ResourceNotFoundException {
+    ) throws ResourceNotFoundException, FirebaseMessagingException {
         String response = paymentService.successPayment( userId, note, specificAddress );
         cartService.clearCartByUser(userId);
 

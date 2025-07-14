@@ -32,6 +32,10 @@ public class CarrierService {
                 .orElseThrow(() -> new ResourceNotFoundException("Repartidor no encontrado"));
     }
 
+    public List<Carrier> findAll(){
+        return carrierRepository.findAll();
+    }
+
     public Carrier findByUser(User user) throws ResourceNotFoundException {
         return carrierRepository.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Repartidor no encontrado"));

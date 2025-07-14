@@ -73,6 +73,10 @@ public class UserService {
         return mRepository.save(user);
     }
 
+    public List<User> saveAll(List<User> users) {
+        return mRepository.saveAll(users);
+    }
+
     public List<UserDTO> getAll(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MainUser mainUser = (MainUser) authentication.getPrincipal();
@@ -165,4 +169,5 @@ public class UserService {
             return null;
         }
     }
+
 }

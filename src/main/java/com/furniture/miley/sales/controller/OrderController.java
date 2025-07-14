@@ -13,6 +13,7 @@ import com.furniture.miley.sales.service.OrderPreparationService;
 import com.furniture.miley.sales.service.OrderService;
 import com.furniture.miley.sales.service.OrderShippingService;
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -190,7 +191,7 @@ public class OrderController {
     @PostMapping("/shipping/transit")
     public ResponseEntity<SuccessResponseDTO<OrderShippingDTO>> checkTransitShippingOrder(
             @RequestBody TransitOrderShippingDTO transitOrderShippingDTO
-    ) throws AbortedProcessException, ResourceNotFoundException {
+    ) throws AbortedProcessException, ResourceNotFoundException, StripeException, FirebaseMessagingException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.IN_TRANSIT_SHIPPING_ORDER,
@@ -248,7 +249,7 @@ public class OrderController {
     @PostMapping("/preparation/complete")
     public ResponseEntity<SuccessResponseDTO<OrderPreparationDTO>> completePreparationOrder(
             @RequestBody CompletedOrderPreparationDTO completedOrderPreparationDTO
-    ) throws AbortedProcessException, ResourceNotFoundException, FirebaseMessagingException {
+    ) throws AbortedProcessException, ResourceNotFoundException, FirebaseMessagingException, StripeException {
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.COMPLETED_PREPARATION_ORDER,

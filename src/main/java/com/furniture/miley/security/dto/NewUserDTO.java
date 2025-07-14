@@ -10,7 +10,8 @@ public record NewUserDTO (
         @NotBlank(message = "Required") String lastName,
         @Email(message = "Invalid") String email,
         @NotBlank(message = "Required") String password,
-        String notificationToken,
+        String notificationMobileToken,
+        String notificationWebToken,
         MemoryCartDTO memoryCart,
         MemoryAddressDTO memoryAddress,
         Boolean isAdmin

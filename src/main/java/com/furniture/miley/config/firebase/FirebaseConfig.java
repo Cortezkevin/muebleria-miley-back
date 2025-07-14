@@ -20,7 +20,7 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initFirebase() throws IOException {
-        Resource keyResource = resourceLoader.getResource("classpath:miley-notifications-firebase-adminsdk-fbsvc-ea29e8548c.json");
+        Resource keyResource = resourceLoader.getResource("classpath:miley-notifications-firebase-adminsdk-fbsvc-a0a306c137.json");
         InputStream serviceAccount  = keyResource.getInputStream();
         FirebaseOptions options = FirebaseOptions.builder()
                 .setProjectId("miley-notifications")

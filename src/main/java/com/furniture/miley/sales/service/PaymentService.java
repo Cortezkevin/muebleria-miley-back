@@ -4,6 +4,8 @@ import com.furniture.miley.config.cloudinary.dto.UploadDTO;
 import com.furniture.miley.config.cloudinary.dto.UploadResultDTO;
 import com.furniture.miley.config.cloudinary.service.CloudinaryService;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
+import com.furniture.miley.profile.dto.notification.NewNotificationDTO;
+import com.furniture.miley.profile.service.NotificationService;
 import com.furniture.miley.sales.dto.payment.PaymentIndentResponseDTO;
 import com.furniture.miley.sales.enums.OrderStatus;
 import com.furniture.miley.sales.enums.PaymentMethod;
@@ -18,7 +20,9 @@ import com.furniture.miley.sales.repository.InvoiceRepository;
 import com.furniture.miley.sales.repository.order.OrderDetailRepository;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.service.UserService;
+import com.furniture.miley.warehouse.service.GrocerService;
 import com.furniture.miley.warehouse.service.InventoryMovementsService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
@@ -55,8 +59,10 @@ public class PaymentService {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
     private final ResourceLoader resourceLoader;
+    private final GrocerService grocerService;
+    private final NotificationService notificationService;
 
-    public String successPayment(String userId, String note, String specificAddress) throws ResourceNotFoundException {
+    public String successPayment(String userId, String note, String specificAddress) throws ResourceNotFoundException, FirebaseMessagingException {
         User user = userService.findById( userId );
         Address userAddress= user.getPersonalInformation().getAddress();
         Cart userCart = user.getCart();
@@ -119,6 +125,17 @@ public class PaymentService {
                 .build();
 
         invoiceRepository.save( newInvoice );
+
+        // TODO: NOTIFICAR A LOS ALMACENEROS DEL NUEVO PEDIDO
+        List<User> grocers = grocerService.findAll().stream().map(g -> g.getUser()).toList();
+        notificationService.sendNotificationTo(
+                grocers,
+                new NewNotificationDTO(
+                        "Nuevo Pedido",
+                        "Hay un nuevo pedido pendiente a preparar",
+                        null
+                )
+        );
 
         /*"Compra realizada correctamente"*/
         return "Compra realizada correctamente";

@@ -39,17 +39,32 @@ public class AuthController {
         );
     }
 
-    @PutMapping("/device-token/{userId}")
-    public ResponseEntity<SuccessResponseDTO<String>> saveDeviceToken(
+    @PutMapping("/device-token/mobile/{userId}")
+    public ResponseEntity<SuccessResponseDTO<String>> saveDeviceMobileToken(
             @PathVariable("userId") String userId,
             @RequestParam(name = "token") String token
     ) throws ResourceNotFoundException {
-        log.info("Calling saveDeviceToken {}",token);
+        log.info("Calling saveDeviceMobileToken {}",token);
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.SUCCESS,
                         HttpStatus.OK.name(),
-                        authService.saveDeviceToken(userId, token)
+                        authService.saveDeviceMobileToken(userId, token)
+                )
+        );
+    }
+
+    @PutMapping("/device-token/web/{userId}")
+    public ResponseEntity<SuccessResponseDTO<String>> saveDeviceWebToken(
+            @PathVariable("userId") String userId,
+            @RequestParam(name = "token") String token
+    ) throws ResourceNotFoundException {
+        log.info("Calling saveDeviceWebToken {}",token);
+        return ResponseEntity.ok(
+                new SuccessResponseDTO<>(
+                        ResponseMessage.SUCCESS,
+                        HttpStatus.OK.name(),
+                        authService.saveDeviceWebToken(userId, token)
                 )
         );
     }

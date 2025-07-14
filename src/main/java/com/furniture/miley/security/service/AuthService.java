@@ -115,8 +115,11 @@ public class AuthService {
                 .status(Status.ACTIVO)
                 .build();
 
-        if( newUserDTO.notificationToken() != null ) {
-            newUser.setNotificationToken(newUserDTO.notificationToken());
+        if( newUserDTO.notificationMobileToken() != null ) {
+            newUser.setNotificationMobileToken(newUserDTO.notificationMobileToken());
+        }
+        if( newUserDTO.notificationWebToken() != null ){
+            newUser.setNotificationWebToken(newUserDTO.notificationWebToken());
         }
 
         User userCreated = userRepository.save(newUser);
@@ -205,9 +208,16 @@ public class AuthService {
         }
     }
 
-    public String saveDeviceToken(String userId, String token) throws ResourceNotFoundException {
+    public String saveDeviceMobileToken(String userId, String token) throws ResourceNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-        user.setNotificationToken(token);
+        user.setNotificationMobileToken(token);
+        userRepository.save(user);
+        return "Token del dispositivo de usuario guardado";
+    }
+
+    public String saveDeviceWebToken(String userId, String token) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        user.setNotificationWebToken(token);
         userRepository.save(user);
         return "Token del dispositivo de usuario guardado";
     }

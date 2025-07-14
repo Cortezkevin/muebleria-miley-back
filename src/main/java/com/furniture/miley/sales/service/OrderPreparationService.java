@@ -2,7 +2,11 @@ package com.furniture.miley.sales.service;
 
 import com.furniture.miley.catalog.model.Product;
 import com.furniture.miley.catalog.service.ProductService;
+import com.furniture.miley.delivery.model.Carrier;
+import com.furniture.miley.delivery.service.CarrierService;
 import com.furniture.miley.exception.customexception.*;
+import com.furniture.miley.profile.dto.notification.NewNotificationDTO;
+import com.furniture.miley.profile.service.NotificationService;
 import com.furniture.miley.sales.dto.order.preparation.*;
 import com.furniture.miley.sales.enums.OrderStatus;
 import com.furniture.miley.sales.enums.PreparationStatus;
@@ -25,6 +29,7 @@ import com.furniture.miley.warehouse.repository.InventoryMovementsRepository;
 import com.furniture.miley.warehouse.service.GrocerService;
 import com.furniture.miley.warehouse.service.WarehouseService;
 import com.google.firebase.messaging.*;
+import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -48,6 +53,8 @@ public class OrderPreparationService {
     private final OrderService orderService;
     private final ProductService productService;
     private final UserService userService;
+    private final CarrierService carrierService;
+    private final NotificationService notificationService;
 
     public OrderPreparation findById(String id) throws ResourceNotFoundException {
         return orderPreparationRepository.findById(id)
@@ -121,7 +128,7 @@ public class OrderPreparationService {
         return OrderPreparationDTO.toDTO( orderPreparationUpdated );
     }
 
-    public OrderPreparationDTO checkOrderPreparationCompleted(CompletedOrderPreparationDTO completedOrderPreparationDTO) throws ResourceNotFoundException, AbortedProcessException, FirebaseMessagingException {
+    public OrderPreparationDTO checkOrderPreparationCompleted(CompletedOrderPreparationDTO completedOrderPreparationDTO) throws ResourceNotFoundException, AbortedProcessException, FirebaseMessagingException, StripeException {
         OrderPreparation orderPreparation = this.findById( completedOrderPreparationDTO.orderPreparationId() );
         Grocer grocer = grocerService.findById( orderPreparation.getGrocer().getId() );
         Order order = orderService.findById( orderPreparation.getOrder().getId() );
@@ -202,27 +209,31 @@ public class OrderPreparationService {
         //orderRepository.save( order );
         OrderPreparation orderPreparationUpdated = orderPreparationRepository.save( orderPreparation );
 
-        if( order.getUser().getNotificationToken() != null ){
-            String userRegistrationToken = order.getUser().getNotificationToken();
-            Message message = Message.builder()
-                    .putData("order_id",order.getId())
-                    .setNotification(
-                            Notification.builder()
-                                    .setTitle("Su pedido ya esta preparado")
-                                    .setBody("Su pedido ya esta listo para iniciar con el envio, puede verificar el estado aqui")
-                                    .build()
+        if( order.getUser().getNotificationWebToken() != null || order.getUser().getNotificationMobileToken() != null ){
+            notificationService.sendNotificationTo(
+                    order.getUser(),
+                    new NewNotificationDTO(
+                            "Su pedido ya esta preparado",
+                            "Su pedido ya esta listo para iniciar con el envio, puede verificar el estado tocando este mensaje",
+                            null
                     )
-                    .setAndroidConfig(
-                            AndroidConfig.builder()
-                                    .setNotification(AndroidNotification.builder()
-                                            .setClickAction("order_intent")
-                                            .build())
-                                    .build()
+            );
+
+            notificationService.sendNotificationTo(
+                    carrierService.findAll().stream().map(Carrier::getUser).toList(),
+                    new NewNotificationDTO(
+                            "Nuevo Pedido",
+                            "Hay un nuevo pedido pendiente a entregar",
+                            null
                     )
-                    .setToken(userRegistrationToken)
-                    .build();
-            String response = FirebaseMessaging.getInstance().send(message);
-            System.out.println("Successfully sent message: " + response);
+            );
+            /*NotificationHelpers.sendNotification(
+                    order.getUser(),
+                    "Su pedido ya esta preparado",
+                    "Su pedido ya esta listo para iniciar con el envio, puede verificar el estado tocando este mensaje",
+                    null,
+                    "order-intent"
+            );*/
         }
 
         /*"Se completo el proceso de preparacion del pedido"*/
