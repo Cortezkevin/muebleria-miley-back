@@ -135,13 +135,6 @@ public class OrderShippingService {
 
         /*TODO: NOTIFICAR AL CLIENTE QUE SU PEDIDO YA INICIO EL RECORRIDO*/
         if( order.getUser().getNotificationWebToken() != null || order.getUser().getNotificationMobileToken() != null ){
-            /*NotificationHelpers.sendNotification(
-                    order.getUser(),
-                    "Pedido en camino",
-                    "Su pedido ya inicio el recorrido para llegar a sus manos, haga seguimiento tocando este mensaje.",
-                    null,
-                    "order-intent"
-            );*/
             notificationService.sendNotificationTo(
                     order.getUser(),
                     new NewNotificationDTO(

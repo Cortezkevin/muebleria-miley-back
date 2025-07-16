@@ -206,7 +206,6 @@ public class OrderPreparationService {
 
         orderPreparation.setOrder(order);
 
-        //orderRepository.save( order );
         OrderPreparation orderPreparationUpdated = orderPreparationRepository.save( orderPreparation );
 
         if( order.getUser().getNotificationWebToken() != null || order.getUser().getNotificationMobileToken() != null ){
@@ -227,13 +226,6 @@ public class OrderPreparationService {
                             null
                     )
             );
-            /*NotificationHelpers.sendNotification(
-                    order.getUser(),
-                    "Su pedido ya esta preparado",
-                    "Su pedido ya esta listo para iniciar con el envio, puede verificar el estado tocando este mensaje",
-                    null,
-                    "order-intent"
-            );*/
         }
 
         /*"Se completo el proceso de preparacion del pedido"*/

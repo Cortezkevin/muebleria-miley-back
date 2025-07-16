@@ -11,6 +11,7 @@ import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PersonalInformationService {
@@ -63,6 +65,7 @@ public class PersonalInformationService {
     public PersonalDataDTO getFromSession() throws ResourceNotFoundException {
         MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByEmail(mainUser.getEmail());
+        log.info("getFromSession user {}", user);
         return PersonalDataDTO.parseToDTO(user.getPersonalInformation());
     }
 }
