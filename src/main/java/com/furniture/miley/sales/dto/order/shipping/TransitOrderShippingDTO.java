@@ -1,6 +1,8 @@
 package com.furniture.miley.sales.dto.order.shipping;
 
 public record TransitOrderShippingDTO(
-        String orderShippingId
+        String orderShippingId,
+        Double lng,
+        Double lta
 ) {
 }

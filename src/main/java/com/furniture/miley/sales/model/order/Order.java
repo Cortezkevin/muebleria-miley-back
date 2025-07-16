@@ -46,7 +46,7 @@ public class Order {
     @Enumerated( EnumType.STRING )
     private PaymentMethod paymentMethod;
 
-    @OneToOne(mappedBy = "order")
+    @OneToOne(mappedBy = "order", fetch = FetchType.EAGER)
     private OrderShipping orderShipping;
 
     @OneToOne(mappedBy = "order")

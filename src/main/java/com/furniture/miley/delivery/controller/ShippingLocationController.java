@@ -3,7 +3,9 @@ package com.furniture.miley.delivery.controller;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
+import com.furniture.miley.sales.dto.order.OrderDTO;
 import com.furniture.miley.sales.dto.order.shipping.OrderShippingDTO;
+import com.furniture.miley.sales.service.OrderService;
 import com.furniture.miley.sales.service.OrderShippingService;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +32,8 @@ public class ShippingLocationController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponseDTO<List<OrderShippingDTO>>> getAllReadyToSend(){
-        List<OrderShippingDTO> orderShippingDTOList = orderShippingService.getAllReadyToSend();
+    public ResponseEntity<SuccessResponseDTO<List<OrderDTO>>> getAllReadyToSend() throws ResourceNotFoundException {
+        List<OrderDTO> orderShippingDTOList = orderShippingService.getAllReadyToSend();
         return orderShippingDTOList.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(

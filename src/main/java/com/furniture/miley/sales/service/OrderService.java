@@ -45,6 +45,10 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));
     }
 
+    public List<Order> findAll(Sort sort){
+        return orderRepository.findAll(sort);
+    }
+
     public DetailedOrderDTO getDetailsById(String id) throws ResourceNotFoundException {
         return DetailedOrderDTO.toDTO( this.findById(id) );
     }

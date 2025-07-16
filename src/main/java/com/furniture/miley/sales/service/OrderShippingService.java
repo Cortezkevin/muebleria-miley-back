@@ -2,10 +2,12 @@ package com.furniture.miley.sales.service;
 
 import com.furniture.miley.delivery.enums.CarrierStatus;
 import com.furniture.miley.delivery.model.Carrier;
+import com.furniture.miley.delivery.model.OrderShippingLocation;
 import com.furniture.miley.delivery.service.CarrierService;
 import com.furniture.miley.exception.customexception.*;
 import com.furniture.miley.profile.dto.notification.NewNotificationDTO;
 import com.furniture.miley.profile.service.NotificationService;
+import com.furniture.miley.sales.dto.order.OrderDTO;
 import com.furniture.miley.sales.dto.order.shipping.*;
 import com.furniture.miley.sales.enums.OrderStatus;
 import com.furniture.miley.sales.enums.ShippingStatus;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +39,7 @@ public class OrderShippingService {
     private final OrderService orderService;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final OrderShippingLocationService orderShippingLocationService;
 
     public OrderShipping findById(String id) throws ResourceNotFoundException {
         return orderShippingRepository.findById(id)
@@ -47,14 +51,39 @@ public class OrderShippingService {
         return orderShippingRepository.findAll(sort).stream().map(OrderShippingDTO::toDTO).toList();
     }
 
-    public List<OrderShippingDTO> getAllReadyToSend(){
+    public List<OrderDTO> getAllReadyToSend() throws ResourceNotFoundException {
+        MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByEmail(mainUser.getEmail());
+        Carrier carrier = carrierService.findByUser(user);
         Sort sort = Sort.by( Sort.Direction.DESC, "createdDate" );
-        return orderShippingRepository.findAll(sort).stream()
-                .filter(orderShipping -> orderShipping.getStatus().equals(ShippingStatus.PREPARADO))
-                .map(OrderShippingDTO::toDTO)
+        return orderService.findAll(sort).stream()
+                .filter(order -> {
+                    Optional<OrderShipping> os = orderShippingRepository.findByOrder(order);
+                    if(os.isEmpty()){
+                        return false;
+                    }else {
+                        if(os.get().getStatus().equals(ShippingStatus.PREPARADO) && os.get().getCarrier().getId().equals(carrier.getId())){
+                            return true;
+                        }else {
+                            return false;
+                        }
+                    }
+                })
+                .map(OrderDTO::toDTO)
                 .toList();
     }
-
+/*
+    public List<OrderShippingDTO> getAllReadyToSend() throws ResourceNotFoundException {
+        MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByEmail(mainUser.getEmail());
+        Carrier carrier = carrierService.findByUser(user);
+        Sort sort = Sort.by( Sort.Direction.DESC, "createdDate" );
+        return orderShippingRepository.findAll(sort).stream()
+                .filter(order -> order.getStatus().equals(ShippingStatus.PREPARADO))
+                .filter(order -> order.getCarrier().getId().equals(carrier.getId()))
+                .map(OrderShippingDTO::toDTO)
+                .toList();
+    }*/
 
     public OrderShippingDTO startShippingOrder(StartOrderShippingDTO startOrderShippingDTO) throws ResourceNotFoundException, AbortedProcessException, AlreadyStartedProcessException, FinishCurrentProcessException {
         Order order = orderService.findById(startOrderShippingDTO.orderId());
@@ -132,6 +161,12 @@ public class OrderShippingService {
         carrier.setStatus(CarrierStatus.EN_RUTA);
         orderShipping.setCarrier( carrier );
         orderShipping.setOrder(order);
+
+        // TODO: CREAR OBJETO DE UBICACION DEL PEDIDO
+        orderShippingLocationService.save(OrderShippingLocation.builder()
+                .lta(transitOrderShippingDTO.lta())
+                .lng(transitOrderShippingDTO.lng())
+                .build());
 
         /*TODO: NOTIFICAR AL CLIENTE QUE SU PEDIDO YA INICIO EL RECORRIDO*/
         if( order.getUser().getNotificationWebToken() != null || order.getUser().getNotificationMobileToken() != null ){
