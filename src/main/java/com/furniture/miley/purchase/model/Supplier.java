@@ -26,12 +26,6 @@ public class Supplier {
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 
-    /*@OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private List<EntryGuide> entryGuides = new ArrayList<>();*/
-
-    /*@OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private List<RejectionGuide> rejectionGuides = new ArrayList<>();*/
-
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private List<Product> productList = new ArrayList<>();
 
