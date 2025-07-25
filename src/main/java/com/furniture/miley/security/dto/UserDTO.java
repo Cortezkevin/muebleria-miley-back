@@ -1,7 +1,7 @@
 package com.furniture.miley.security.dto;
 
 import com.furniture.miley.profile.dto.address.AddressDTO;
-import com.furniture.miley.security.enums.Status;
+import com.furniture.miley.security.enums.UserStatus;
 import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.security.model.Role;
@@ -20,7 +20,7 @@ public record UserDTO(
         String email,
         String photoUrl,
         Set<String> roles,
-        Status status,
+        UserStatus userStatus,
         ProfileDTO profile,
         Object roleExtraData
 ){
@@ -32,7 +32,7 @@ public record UserDTO(
                 mainUser.getEmail(),
                 user.getPersonalInformation().getPhotoUrl() != null ? user.getPersonalInformation().getPhotoUrl() : "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                 mainUser.getRoles().stream().map(RolName::name).collect(Collectors.toSet()),
-                user.getStatus(),
+                user.getUserStatus(),
                 new ProfileDTO(
                         user.getPersonalInformation().getBirthdate() != null ? user.getPersonalInformation().getBirthdate().toString() : "",
                         user.getPersonalInformation().getAddress() != null ? AddressDTO.toDTO(user.getPersonalInformation().getAddress()) : null,
@@ -50,7 +50,7 @@ public record UserDTO(
                 user.getEmail(),
                 user.getPersonalInformation().getPhotoUrl() != null ? user.getPersonalInformation().getPhotoUrl() : "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                 user.getRoles().stream().map(Role::getRolName).map(RolName::name).collect(Collectors.toSet()),
-                user.getStatus(),
+                user.getUserStatus(),
                 new ProfileDTO(
                         user.getPersonalInformation().getBirthdate() != null ? user.getPersonalInformation().getBirthdate().toString() : "",
                         user.getPersonalInformation().getAddress() != null ? AddressDTO.toDTO( user.getPersonalInformation().getAddress() ) : null,
@@ -68,7 +68,7 @@ public record UserDTO(
                 user.getEmail(),
                 user.getPersonalInformation().getPhotoUrl() != null ? user.getPersonalInformation().getPhotoUrl() : "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                 user.getRoles().stream().map(Role::getRolName).map(RolName::name).collect(Collectors.toSet()),
-                user.getStatus(),
+                user.getUserStatus(),
                 new ProfileDTO(
                         user.getPersonalInformation().getBirthdate() != null ? user.getPersonalInformation().getBirthdate().toString() : "",
                         user.getPersonalInformation().getAddress() != null ? AddressDTO.toDTO( user.getPersonalInformation().getAddress() ) : null,

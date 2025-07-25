@@ -9,6 +9,7 @@ import com.furniture.miley.profile.dto.user.CreateUserDTO;
 import com.furniture.miley.profile.dto.user.UpdateProfile;
 import com.furniture.miley.profile.dto.user.UpdateUserDTO;
 import com.furniture.miley.profile.service.PersonalInformationService;
+import com.furniture.miley.security.dto.MinimalUserDTO;
 import com.furniture.miley.security.dto.RoleDTO;
 import com.furniture.miley.security.dto.UserDTO;
 import com.furniture.miley.security.service.RoleService;
@@ -39,8 +40,8 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping
-    public ResponseEntity<SuccessResponseDTO<List<UserDTO>>> getAll(){
-        List<UserDTO> userDTOList = userService.getAll();
+    public ResponseEntity<SuccessResponseDTO<List<MinimalUserDTO>>> getAll(){
+        List<MinimalUserDTO> userDTOList = userService.getAll();
         return userDTOList.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(

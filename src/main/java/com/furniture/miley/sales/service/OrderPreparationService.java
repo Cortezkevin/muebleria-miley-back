@@ -190,9 +190,13 @@ public class OrderPreparationService {
 
         orderPreparation.setGrocer( grocer );
 
+        User user = userService.findById(order.getUser().getId());
+
         OrderShipping newOrderShipping = OrderShipping.builder()
                 .order( order )
                 .preparedBy( grocer.getUser().getPersonalInformation().getFullName() )
+                .destinationLat( user.getPersonalInformation().getAddress().getLta())
+                .destinationLng( user.getPersonalInformation().getAddress().getLng())
                 .address( order.getShippingAddress() )
                 .distance( order.getDistance() )
                 .createdDate( new Timestamp(new Date().getTime()))

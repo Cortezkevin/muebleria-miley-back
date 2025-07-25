@@ -1,29 +1,29 @@
 package com.furniture.miley.security.service;
 
-import com.furniture.miley.catalog.repository.ProductRepository;
 import com.furniture.miley.commons.helpers.StripeHelpers;
-import com.furniture.miley.profile.dto.user.CreateUserDTO;
-import com.furniture.miley.profile.dto.user.UpdateUserDTO;
-import com.furniture.miley.profile.repository.AddressRepository;
+import com.furniture.miley.delivery.service.CarrierService;
 import com.furniture.miley.exception.customexception.ResourceDuplicatedException;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
-import com.furniture.miley.profile.repository.PersonalInformationRepository;
-import com.furniture.miley.sales.repository.cart.CartItemRepository;
-import com.furniture.miley.sales.repository.cart.CartRepository;
+import com.furniture.miley.profile.dto.user.CreateUserDTO;
+import com.furniture.miley.profile.dto.user.UpdateUserDTO;
 import com.furniture.miley.profile.model.Address;
-import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.profile.model.PersonalInformation;
+import com.furniture.miley.profile.repository.AddressRepository;
+import com.furniture.miley.profile.repository.PersonalInformationRepository;
+import com.furniture.miley.sales.model.cart.Cart;
+import com.furniture.miley.sales.repository.cart.CartRepository;
+import com.furniture.miley.security.dto.MinimalUserDTO;
 import com.furniture.miley.security.dto.UserDTO;
 import com.furniture.miley.security.enums.RolName;
-import com.furniture.miley.security.jwt.JwtProvider;
 import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.Role;
 import com.furniture.miley.security.model.User;
 import com.furniture.miley.security.repository.UserRepository;
 import com.furniture.miley.warehouse.dto.carrier.CarrierDTO;
 import com.furniture.miley.warehouse.dto.grocer.GrocerDTO;
+import com.furniture.miley.warehouse.service.GrocerService;
 import com.stripe.exception.StripeException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,29 +35,16 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class UserService {
 
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private UserRepository mRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
-    private PersonalInformationRepository personalInformationRepository;
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    @Autowired
-    private CartRepository cartRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CartItemRepository cartItemRepository;
+    private final RoleService roleService;
+    private final UserRepository mRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AddressRepository addressRepository;
+    private final PersonalInformationRepository personalInformationRepository;
+    private final CartRepository cartRepository;
 
     public User findById(String id) throws ResourceNotFoundException {
         return mRepository.findById(id)
@@ -77,12 +64,12 @@ public class UserService {
         return mRepository.saveAll(users);
     }
 
-    public List<UserDTO> getAll(){
+    public List<MinimalUserDTO> getAll(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MainUser mainUser = (MainUser) authentication.getPrincipal();
         return mRepository.findAll().stream()
                 .filter(u -> !u.getEmail().equals(mainUser.getEmail()))
-                .map(UserDTO::toDTO).toList();
+                .map(MinimalUserDTO::toDTO).toList();
     }
 
 
@@ -92,15 +79,15 @@ public class UserService {
         Set<Role> roles = new HashSet<>();
 
         for(String r: createUserDTO.roles()){
-            Role roleUser = roleService.findByRolName( RolName.valueOf( r ) );
-            roles.add( roleUser );
+            Role role = roleService.findByRolName( RolName.valueOf( r ) );
+            roles.add( role );
         }
 
         User newUser = User.builder()
                 .email(createUserDTO.email())
                 .password(passwordEncoder.encode(createUserDTO.password()))
                 .roles( roles )
-                .status(createUserDTO.status())
+                .userStatus(createUserDTO.userStatus())
                 .build();
 
         User userCreated = mRepository.save(newUser);
@@ -136,7 +123,7 @@ public class UserService {
     public UserDTO update(UpdateUserDTO updateUserDTO) throws ResourceNotFoundException {
         User user = this.findById( updateUserDTO.userId() );
         user.setEmail( updateUserDTO.email() );
-        user.setStatus( updateUserDTO.status() );
+        user.setUserStatus( updateUserDTO.userStatus() );
 
         PersonalInformation personalInformation = personalInformationRepository.findByUser( user ).orElse(null);
         if( personalInformation != null ){

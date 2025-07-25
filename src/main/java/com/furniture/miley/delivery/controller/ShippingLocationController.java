@@ -3,6 +3,7 @@ package com.furniture.miley.delivery.controller;
 import com.furniture.miley.commons.constants.ResponseMessage;
 import com.furniture.miley.commons.dto.SuccessResponseDTO;
 import com.furniture.miley.exception.customexception.ResourceNotFoundException;
+import com.furniture.miley.sales.dto.order.DetailedOrderDTO;
 import com.furniture.miley.sales.dto.order.OrderDTO;
 import com.furniture.miley.sales.dto.order.shipping.OrderShippingDTO;
 import com.furniture.miley.sales.service.OrderService;
@@ -32,8 +33,8 @@ public class ShippingLocationController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponseDTO<List<OrderDTO>>> getAllReadyToSend() throws ResourceNotFoundException {
-        List<OrderDTO> orderShippingDTOList = orderShippingService.getAllReadyToSend();
+    public ResponseEntity<SuccessResponseDTO<List<DetailedOrderDTO>>> getAllReadyToSend() throws ResourceNotFoundException {
+        List<DetailedOrderDTO> orderShippingDTOList = orderShippingService.getAllReadyToSend();
         return orderShippingDTOList.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(

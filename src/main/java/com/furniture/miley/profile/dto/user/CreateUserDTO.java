@@ -1,6 +1,6 @@
 package com.furniture.miley.profile.dto.user;
 
-import com.furniture.miley.security.enums.Status;
+import com.furniture.miley.security.enums.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -11,7 +11,7 @@ public record CreateUserDTO(
         @NotBlank(message = "Required") String lastName,
         @Email(message = "Invalid") String email,
         @NotBlank(message = "Required") String password,
-        Status status,
+        UserStatus userStatus,
         List<String> roles
 ) {
 }

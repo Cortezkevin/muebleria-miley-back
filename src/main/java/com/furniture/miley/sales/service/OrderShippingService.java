@@ -7,6 +7,7 @@ import com.furniture.miley.delivery.service.CarrierService;
 import com.furniture.miley.exception.customexception.*;
 import com.furniture.miley.profile.dto.notification.NewNotificationDTO;
 import com.furniture.miley.profile.service.NotificationService;
+import com.furniture.miley.sales.dto.order.DetailedOrderDTO;
 import com.furniture.miley.sales.dto.order.OrderDTO;
 import com.furniture.miley.sales.dto.order.shipping.*;
 import com.furniture.miley.sales.enums.OrderStatus;
@@ -51,7 +52,7 @@ public class OrderShippingService {
         return orderShippingRepository.findAll(sort).stream().map(OrderShippingDTO::toDTO).toList();
     }
 
-    public List<OrderDTO> getAllReadyToSend() throws ResourceNotFoundException {
+    public List<DetailedOrderDTO> getAllReadyToSend() throws ResourceNotFoundException {
         MainUser mainUser = (MainUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByEmail(mainUser.getEmail());
         Carrier carrier = carrierService.findByUser(user);
@@ -62,14 +63,14 @@ public class OrderShippingService {
                     if(os.isEmpty()){
                         return false;
                     }else {
-                        if(os.get().getStatus().equals(ShippingStatus.PREPARADO) && os.get().getCarrier().getId().equals(carrier.getId())){
+                        if((os.get().getStatus().equals(ShippingStatus.PREPARADO) || os.get().getStatus().equals(ShippingStatus.EN_TRANSITO)) && os.get().getCarrier().getId().equals(carrier.getId())){
                             return true;
                         }else {
                             return false;
                         }
                     }
                 })
-                .map(OrderDTO::toDTO)
+                .map(DetailedOrderDTO::toDTO)
                 .toList();
     }
 /*
@@ -166,6 +167,7 @@ public class OrderShippingService {
         orderShippingLocationService.save(OrderShippingLocation.builder()
                 .lta(transitOrderShippingDTO.lta())
                 .lng(transitOrderShippingDTO.lng())
+                        .carrier(carrier)
                 .build());
 
         /*TODO: NOTIFICAR AL CLIENTE QUE SU PEDIDO YA INICIO EL RECORRIDO*/

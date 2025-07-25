@@ -1,5 +1,5 @@
 package com.furniture.miley.security.enums;
 
-public enum Status {
+public enum UserStatus {
     ACTIVO, INACTIVO
 }

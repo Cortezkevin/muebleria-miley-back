@@ -6,7 +6,8 @@ import com.furniture.miley.profile.model.Notification;
 import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.sales.model.order.Order;
-import com.furniture.miley.security.enums.Status;
+import com.furniture.miley.security.enums.ResourceStatus;
+import com.furniture.miley.security.enums.UserStatus;
 import com.furniture.miley.warehouse.model.Grocer;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,7 +41,10 @@ public class User {
     private String notificationWebToken;
 
     @Enumerated( EnumType.STRING )
-    private Status status;
+    private UserStatus userStatus;
+
+    @Enumerated(EnumType.STRING)
+    private ResourceStatus resourceStatus = ResourceStatus.ACTIVE;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

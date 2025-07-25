@@ -15,7 +15,7 @@ import com.furniture.miley.profile.model.PersonalInformation;
 import com.furniture.miley.sales.repository.cart.CartItemRepository;
 import com.furniture.miley.sales.repository.cart.CartRepository;
 import com.furniture.miley.security.enums.RolName;
-import com.furniture.miley.security.enums.Status;
+import com.furniture.miley.security.enums.UserStatus;
 import com.furniture.miley.security.jwt.JwtProvider;
 import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.Role;
@@ -65,7 +65,7 @@ public class AuthService {
     public UserDTO getUserFromToken(String token ){
         String username = jwtProvider.getUsernameFromToken( token );
         User user = userRepository.findByEmail( username ).orElseThrow( () -> new ResourceNotFoundException(ResponseMessage.USER_NOT_FOUND)) ;
-        if( user.getStatus().equals(Status.INACTIVO)){
+        if( user.getUserStatus().equals(UserStatus.INACTIVO)){
            throw new UnavailableUserException(ResponseMessage.USER_DISABLED, username);
         }
         return UserDTO.toDTO( user );
@@ -74,7 +74,7 @@ public class AuthService {
     @SneakyThrows
     public SessionDTO loginUser(LoginUserDTO loginUserDTO ){
         User userFound = userRepository.findByEmail(loginUserDTO.email()).orElseThrow(() -> new ResourceNotFoundException("Email no existente"));
-        if( userFound.getStatus().equals(Status.INACTIVO)){
+        if( userFound.getUserStatus().equals(UserStatus.INACTIVO)){
             throw new UnavailableUserException(ResponseMessage.USER_DISABLED, userFound.getEmail());
         }
 
@@ -112,7 +112,7 @@ public class AuthService {
                 .email(newUserDTO.email())
                 .password(passwordEncoder.encode(newUserDTO.password()))
                 .roles( roles )
-                .status(Status.ACTIVO)
+                .userStatus(UserStatus.ACTIVO)
                 .build();
 
         if( newUserDTO.notificationMobileToken() != null ) {

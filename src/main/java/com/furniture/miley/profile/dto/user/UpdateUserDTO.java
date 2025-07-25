@@ -1,6 +1,6 @@
 package com.furniture.miley.profile.dto.user;
 
-import com.furniture.miley.security.enums.Status;
+import com.furniture.miley.security.enums.UserStatus;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public record UpdateUserDTO (
         String firstName,
         String lastName,
         String email,
-        Status status,
+        UserStatus userStatus,
         List<String> roles
 ){
 }

@@ -15,4 +15,5 @@ public class ShippingLocationDTO {
     private Timestamp updatedAt;
     private String carrier;
     private String orderId;
+    private String clientReceiver;
 }

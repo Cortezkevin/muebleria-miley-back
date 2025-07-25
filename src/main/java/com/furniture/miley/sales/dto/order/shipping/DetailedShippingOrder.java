@@ -15,6 +15,8 @@ public record DetailedShippingOrder(
         Timestamp preparedDate,
         Timestamp shippingDate,
         Timestamp completedDate,
+        Double destinationLat,
+        Double destinationLng,
         String exitGuideId,
         ShippingStatus status
 ) {
@@ -28,6 +30,8 @@ public record DetailedShippingOrder(
                 orderShipping.getPreparedDate(),
                 orderShipping.getShippingDate(),
                 orderShipping.getCompletedDate(),
+                orderShipping.getDestinationLat(),
+                orderShipping.getDestinationLng(),
                 orderShipping.getOrder().getExitGuide().getId(),
                 orderShipping.getStatus()
         );

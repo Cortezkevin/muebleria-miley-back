@@ -15,6 +15,7 @@ import com.furniture.miley.sales.service.OrderShippingService;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/api/order")
@@ -192,6 +194,7 @@ public class OrderController {
     public ResponseEntity<SuccessResponseDTO<OrderShippingDTO>> checkTransitShippingOrder(
             @RequestBody TransitOrderShippingDTO transitOrderShippingDTO
     ) throws AbortedProcessException, ResourceNotFoundException, StripeException, FirebaseMessagingException {
+        log.info("Calling method checkTransitShippingOrder");
         return ResponseEntity.ok(
                 new SuccessResponseDTO<>(
                         ResponseMessage.IN_TRANSIT_SHIPPING_ORDER,

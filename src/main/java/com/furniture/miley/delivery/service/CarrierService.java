@@ -27,6 +27,10 @@ public class CarrierService {
     private final UserService userService;
     private final RoleService roleService;
 
+    public Carrier save(Carrier carrier) {
+        return carrierRepository.save(carrier);
+    }
+
     public Carrier findById(String id) throws ResourceNotFoundException {
         return carrierRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Repartidor no encontrado"));

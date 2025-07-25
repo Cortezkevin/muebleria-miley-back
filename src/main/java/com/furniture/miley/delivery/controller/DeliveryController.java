@@ -1,26 +1,32 @@
 package com.furniture.miley.delivery.controller;
 
 import com.furniture.miley.delivery.dto.ShippingLocationDTO;
-import com.furniture.miley.security.model.MainUser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import java.security.Principal;
 import java.sql.Timestamp;
 
 @Slf4j
 @Controller
 public class DeliveryController {
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @MessageMapping("/location")
-    @SendToUser("/queue/delivery")
-    public String handle(ShippingLocationDTO shippingLocation, Principal principal) {
-        MainUser mainUser = (MainUser) principal;
+    @SendTo("/topic/delivery")
+    public ShippingLocationDTO handle(ShippingLocationDTO shippingLocation) {
+        log.info("Receive Shipping Location From Carrier {}, Update: {}", shippingLocation.getCarrier(), shippingLocation);
+
+        String receptor = shippingLocation.getClientReceiver();
         shippingLocation.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        log.info("Receive Shipping Location From Carrier {}, Update: {}", mainUser.getEmail(), shippingLocation);
-        return shippingLocation.toString();
+        log.info("Ubicación recibida de: {}, enviada a: {}", shippingLocation.getCarrier(), receptor);
+
+        return shippingLocation;
     }
 
 }
