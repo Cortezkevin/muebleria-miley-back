@@ -14,7 +14,9 @@ import com.furniture.miley.sales.model.cart.Cart;
 import com.furniture.miley.sales.repository.cart.CartRepository;
 import com.furniture.miley.security.dto.MinimalUserDTO;
 import com.furniture.miley.security.dto.UserDTO;
+import com.furniture.miley.security.enums.ResourceStatus;
 import com.furniture.miley.security.enums.RolName;
+import com.furniture.miley.security.enums.UserStatus;
 import com.furniture.miley.security.model.MainUser;
 import com.furniture.miley.security.model.Role;
 import com.furniture.miley.security.model.User;
@@ -24,6 +26,7 @@ import com.furniture.miley.warehouse.dto.grocer.GrocerDTO;
 import com.furniture.miley.warehouse.service.GrocerService;
 import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -157,4 +160,32 @@ public class UserService {
         }
     }
 
+    public void logicalDelete(String id) throws ResourceNotFoundException {
+        User user = this.findById(id);
+        if(user.getResourceStatus().equals(ResourceStatus.DELETED)) throw new RuntimeException("The user " + user.getEmail() + " is already deleted");
+        user.setUserStatus(UserStatus.INACTIVO);
+        user.setResourceStatus(ResourceStatus.DELETED);
+        mRepository.save(user);
+    }
+
+    public void restore(String id) throws ResourceNotFoundException {
+        User user = this.findById(id);
+        if(user.getResourceStatus().equals(ResourceStatus.ACTIVE)) throw new RuntimeException("The user " + user.getEmail() + " is not deleted");
+        user.setResourceStatus(ResourceStatus.ACTIVE);
+        mRepository.save(user);
+    }
+
+    public void enable(String id) throws ResourceNotFoundException {
+        User user = this.findById(id);
+        if(user.getUserStatus().equals(UserStatus.ACTIVO)) throw new RuntimeException("The user " + user.getEmail() + " is already enabled");
+        user.setUserStatus(UserStatus.ACTIVO);
+        mRepository.save(user);
+    }
+
+    public void disable(String id) throws ResourceNotFoundException {
+        User user = this.findById(id);
+        if(user.getUserStatus().equals(UserStatus.INACTIVO)) throw new RuntimeException("The user " + user.getEmail() + " is already active");
+        user.setUserStatus(UserStatus.INACTIVO);
+        mRepository.save(user);
+    }
 }

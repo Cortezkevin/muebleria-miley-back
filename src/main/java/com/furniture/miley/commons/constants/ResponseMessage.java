@@ -32,4 +32,9 @@ public class ResponseMessage {
     public static final String REVIEW_RECEPTION_ORDER = "Orden de compra revisado correctamente";
     public static final String COMPLETED_RECEPTION_ORDER = "Orden de compra recepcionado correctamente";
     public static final String CONFIRMED_ORDER_RECEPTION = "Confirmacion de recepcion de pedido satisfactoria";
+    public static final String LOGICAL_DELETE = "Recurso eliminado logicamente";
+    public static final String RESTORE = "Recurso restaurado";
+
+    public static final String ENABLED = "Usuario habilitado";
+    public static final String DISABLED = "Usuario deshabilitado";
 }

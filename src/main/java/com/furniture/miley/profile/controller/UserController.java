@@ -123,4 +123,60 @@ public class UserController {
                 )
         );
     }
+
+    @PatchMapping("/delete/{id}")
+    public ResponseEntity<SuccessResponseDTO> delete(
+            @PathVariable String id
+    ) throws ResourceNotFoundException {
+        userService.logicalDelete(id);
+        return ResponseEntity.ok(
+                new SuccessResponseDTO(
+                        ResponseMessage.LOGICAL_DELETE,
+                        HttpStatus.OK.name(),
+                        null
+                )
+        );
+    }
+
+    @PatchMapping("/restore/{id}")
+    public ResponseEntity<SuccessResponseDTO> restore(
+            @PathVariable String id
+    ) throws ResourceNotFoundException {
+        userService.restore(id);
+        return ResponseEntity.ok(
+                new SuccessResponseDTO(
+                        ResponseMessage.RESTORE,
+                        HttpStatus.OK.name(),
+                        null
+                )
+        );
+    }
+
+    @PatchMapping("/enable/{id}")
+    public ResponseEntity<SuccessResponseDTO> enable(
+            @PathVariable String id
+    ) throws ResourceNotFoundException {
+        userService.enable(id);
+        return ResponseEntity.ok(
+                new SuccessResponseDTO(
+                        ResponseMessage.ENABLED,
+                        HttpStatus.OK.name(),
+                        null
+                )
+        );
+    }
+
+    @PatchMapping("/disable/{id}")
+    public ResponseEntity<SuccessResponseDTO> disable(
+            @PathVariable String id
+    ) throws ResourceNotFoundException {
+        userService.disable(id);
+        return ResponseEntity.ok(
+                new SuccessResponseDTO(
+                        ResponseMessage.DISABLED,
+                        HttpStatus.OK.name(),
+                        null
+                )
+        );
+    }
 }
