@@ -126,7 +126,6 @@ public class UserService {
     public UserDTO update(UpdateUserDTO updateUserDTO) throws ResourceNotFoundException {
         User user = this.findById( updateUserDTO.userId() );
         user.setEmail( updateUserDTO.email() );
-        user.setUserStatus( updateUserDTO.userStatus() );
 
         PersonalInformation personalInformation = personalInformationRepository.findByUser( user ).orElse(null);
         if( personalInformation != null ){
